@@ -12,7 +12,7 @@
     <string name="disconnect">Disconnect</string>
     <string name="send">Send</string>
     <string name="clear">Clear</string>
-
+    <string name="default_target_mac_address">00:1D:86:20:00:09</string>
     <string-array name="navimode">
         <item>0</item>
         <item>1</item>
@@ -23,17 +23,10 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="messages_header">Devices config</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <!-- Device Preferences -->
+    <string name="target_mac_address">Target MAC address</string>
 
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
 </resources>

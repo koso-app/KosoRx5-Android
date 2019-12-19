@@ -20,6 +20,7 @@ import com.koso.core.Rx5
 import com.koso.rx5sample.App
 import com.koso.rx5sample.R
 import com.koso.rx5sample.service.ConnectionService
+import com.koso.rx5sample.utils.SharedPreferenceHandler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -74,10 +75,21 @@ class ConnectFragment : Fragment() {
             service = (binder as ConnectionService.ConnectServiceBinder).service
             service?.let {
                 rx5 = it.rx5
+
+
+                defaultConnect()
                 subscribeStateEvent()
                 subscribeDevices()
             }
         }
+    }
+
+    private fun defaultConnect() {
+
+        val device = BluetoothAdapter.getDefaultAdapter()
+            .getRemoteDevice(SharedPreferenceHandler.targetMacAddress)
+        rx5?.cancelDiscovery()
+        rx5?.connectAsClient(device)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,10 +144,7 @@ class ConnectFragment : Fragment() {
                             }
                             else -> {
 //                                it.startDiscovery()
-                                val device = BluetoothAdapter.getDefaultAdapter()
-                                    .getRemoteDevice("00:1D:86:20:00:09")
-                                rx5?.cancelDiscovery()
-                                rx5?.connectAsClient(device)
+                                defaultConnect()
                             }
                         }
                     }
