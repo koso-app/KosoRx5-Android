@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="@color/colorPrimaryDark">
+    <item android:id="@android:id/mask">
+        <shape
+            android:shape="oval">
+            <size android:width="96dp" android:height="96dp"/>
+            <solid android:color="@color/colorAccent"/>
+
+        </shape>
+    </item>
+    <item android:id="@android:id/background"
+        android:drawable="@drawable/shape_oval_btn_disconnect"/>
+</ripple>
