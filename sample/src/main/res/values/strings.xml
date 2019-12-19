@@ -9,4 +9,14 @@
     <string name="tab_text_2">Navigation Command</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
+    <string name="send">Send</string>
+    <string name="clear">Clear</string>
+
+    <string-array name="navimode" >
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
 </resources>

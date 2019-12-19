@@ -1,5 +1,7 @@
 package com.koso.core.command
 
+import java.nio.charset.Charset
+
 
 class NaviInfoCommand(
     val navimode: Int,          //navimode  =0導航模式,=1導航模擬,=2瀏覽模式,=3導航模擬暫停瀏覽模式,=4導航暫時瀏覽模式
@@ -21,11 +23,23 @@ class NaviInfoCommand(
 
         return concatenateByteArrays(
             navimode.toByteArray(4),
-            ctname.toByteArray(24),
-            roadname.toByteArray(64),
-            doornum.toByteArray(24),
+            String(
+                ctname.toByteArray(Charset.forName("UTF-8")),
+                Charset.forName("BIG5")
+            ).toByteArray(24),
+            String(
+                roadname.toByteArray(Charset.forName("UTF-8")),
+                Charset.forName("BIG5")
+            ).toByteArray(64),
+            String(
+                doornum.toByteArray(Charset.forName("UTF-8")),
+                Charset.forName("BIG5")
+            ).toByteArray(24),
             limitsp.toByteArray(4),
-            nextroadname.toByteArray(64),
+            String(
+                nextroadname.toByteArray(Charset.forName("UTF-8")),
+                Charset.forName("BIG5")
+            ).toByteArray(64),
             nextdist.toByteArray(4),
             nextturn.toByteArray(4),
             camera.toByteArray(4),

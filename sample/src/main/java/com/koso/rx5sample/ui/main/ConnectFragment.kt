@@ -77,7 +77,6 @@ class ConnectFragment : Fragment() {
                 subscribeDevices()
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,10 +141,7 @@ class ConnectFragment : Fragment() {
                 }
                 BaseBluetoothDevice.State.Connected -> {
                     vStart.setText(R.string.connected)
-                    val cmd =
-                        NaviInfoCommand(0, "tainan", "abc road", "17a", 40, "simeng road", 350, 5, 10, 35000, 40, 12, 120)
-                    vStart.setBackgroundResource(R.drawable.ripple_oval_btn_connect)
-                    rx5?.write(cmd)
+
                 }
                 BaseBluetoothDevice.State.Discovering -> {
                     vStart.setText(R.string.discovering)
