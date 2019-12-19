@@ -8,7 +8,8 @@ import com.koso.rx5sample.R
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,
-    R.string.tab_text_2
+    R.string.tab_text_2,
+    R.string.tab_text_3
 )
 
 /**
@@ -25,8 +26,11 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
             0 -> {
                 ConnectFragment.newInstance()
             }
-            else -> {
+            1 -> {
                 NaviCommandsFragment.newInstance()
+            }
+            else -> {
+                LogFragment.newInstance()
             }
 
         }
@@ -39,6 +43,6 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
 
     override fun getCount(): Int {
         // Show 2 total pages.
-        return 2
+        return 3
     }
 }

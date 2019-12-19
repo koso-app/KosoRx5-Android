@@ -29,7 +29,7 @@ class TabbedActivity : AppCompatActivity() {
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
 
         val viewPager: ViewPager = findViewById(R.id.view_pager)
-
+        viewPager.offscreenPageLimit = 3
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)

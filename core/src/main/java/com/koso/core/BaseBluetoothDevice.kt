@@ -11,12 +11,10 @@ import androidx.lifecycle.MutableLiveData
 import com.github.ivbaranov.rxbluetooth.BluetoothConnection
 import com.github.ivbaranov.rxbluetooth.RxBluetooth
 import com.koso.core.command.BaseCommand
-import com.koso.core.command.NaviInfoCommand
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.util.*
@@ -166,7 +164,6 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
         bluetoothDevice: BluetoothDevice
     ) {
         val uuid = UUID.fromString(SERVICE_UUID)
-
         val disposable = rxBluetooth.connectAsClient(bluetoothDevice, uuid)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())

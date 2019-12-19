@@ -130,7 +130,11 @@ class NaviCommandsFragment : Fragment() {
                 gpsnum,
                 gpsdir
             )
-            rx5?.write(cmd)
+            if(rx5 != null) {
+                rx5!!.write(cmd)
+                viewmodel.log(cmd.toString())
+            }
+
         }
     }
 

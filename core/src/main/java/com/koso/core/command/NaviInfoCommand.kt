@@ -1,5 +1,6 @@
 package com.koso.core.command
 
+import com.koso.core.util.Utility
 import java.nio.charset.Charset
 
 
@@ -22,32 +23,110 @@ class NaviInfoCommand(
     override fun value(): ByteArray {
 
         return concatenateByteArrays(
-            navimode.toByteArray(4),
-            String(
-                ctname.toByteArray(Charset.forName("UTF-8")),
-                Charset.forName("BIG5")
-            ).toByteArray(24),
-            String(
-                roadname.toByteArray(Charset.forName("UTF-8")),
-                Charset.forName("BIG5")
-            ).toByteArray(64),
-            String(
-                doornum.toByteArray(Charset.forName("UTF-8")),
-                Charset.forName("BIG5")
-            ).toByteArray(24),
-            limitsp.toByteArray(4),
-            String(
-                nextroadname.toByteArray(Charset.forName("UTF-8")),
-                Charset.forName("BIG5")
-            ).toByteArray(64),
-            nextdist.toByteArray(4),
-            nextturn.toByteArray(4),
-            camera.toByteArray(4),
-            navidist.toByteArray(4),
-            navitime.toByteArray(4),
-            gpsnum.toByteArray(4),
-            gpsdir.toByteArray(4)
+            getNaviMode(),
+            getCtName(),
+            getRoadName(),
+            getDoorNum(),
+            getLimitSpeed(),
+            getNextRoadName(),
+            getNextDist(),
+            getNextTurn(),
+            getCamera(),
+            getNaviDist(),
+            getNaviTime(),
+            getGpsNum(),
+            getGpsDir()
         )
+    }
+
+    fun getNaviMode(): ByteArray {
+        return navimode.toByteArray(4)
+    }
+
+    fun getCtName(): ByteArray {
+        return String(
+            ctname.toByteArray(Charset.forName("UTF-8")),
+            Charset.forName("BIG5")
+        ).toByteArray(24)
+    }
+
+    fun getRoadName(): ByteArray {
+        return String(
+            roadname.toByteArray(Charset.forName("UTF-8")),
+            Charset.forName("BIG5")
+        ).toByteArray(64)
+    }
+
+    fun getDoorNum(): ByteArray {
+        return String(
+            doornum.toByteArray(Charset.forName("UTF-8")),
+            Charset.forName("BIG5")
+        ).toByteArray(24)
+    }
+
+    fun getLimitSpeed(): ByteArray {
+        return limitsp.toByteArray(4)
+    }
+
+    fun getNextRoadName(): ByteArray {
+        return String(
+            nextroadname.toByteArray(Charset.forName("UTF-8")),
+            Charset.forName("BIG5")
+        ).toByteArray(64)
+    }
+
+    fun getNextDist(): ByteArray {
+        return nextdist.toByteArray(4)
+    }
+
+    fun getNextTurn(): ByteArray {
+        return nextturn.toByteArray(4)
+    }
+
+    fun getCamera(): ByteArray {
+        return camera.toByteArray(4)
+    }
+
+    fun getNaviDist(): ByteArray {
+        return navidist.toByteArray(4)
+    }
+
+    fun getNaviTime(): ByteArray {
+        return navitime.toByteArray(4)
+    }
+
+    fun getGpsNum(): ByteArray {
+        return gpsnum.toByteArray(4)
+    }
+
+    fun getGpsDir(): ByteArray {
+        return gpsdir.toByteArray(4)
+    }
+
+    override fun valueToString(): String {
+        val builder = StringBuilder()
+        builder.appendln("{")
+        builder.appendln("NaviMode = ${Utility.bytesToHex(getNaviMode())}")
+        builder.appendln("CityName = ${Utility.bytesToHex(getCtName())}")
+        builder.appendln("RoadName = ${Utility.bytesToHex(getRoadName())}")
+        builder.appendln("DoorNum = ${Utility.bytesToHex(getDoorNum())}")
+        builder.appendln("LimitSpeed = ${Utility.bytesToHex(getLimitSpeed())}")
+        builder.appendln(
+            "NextRoadName = ${Utility.bytesToHex(
+                getNextRoadName()
+            )}"
+        )
+        builder.appendln("NextDist = ${Utility.bytesToHex(getNextDist())}")
+        builder.appendln("NextTurn = ${Utility.bytesToHex(getNextTurn())}")
+        builder.appendln("Camera = ${Utility.bytesToHex(getCamera())}")
+        builder.appendln("NaviDist = ${Utility.bytesToHex(getNaviDist())}")
+        builder.appendln("NaviTime = ${Utility.bytesToHex(getNaviTime())}")
+        builder.appendln("GpsNum = ${Utility.bytesToHex(getGpsNum())}")
+        builder.appendln("GpsDir = ${Utility.bytesToHex(getGpsDir())}")
+        builder.appendln("}")
+
+
+        return builder.toString()
     }
 
 }

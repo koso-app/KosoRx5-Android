@@ -1,6 +1,7 @@
 package com.koso.rx5sample.ui.main
 
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -16,7 +17,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.koso.core.BaseBluetoothDevice
 import com.koso.core.Rx5
-import com.koso.core.command.NaviInfoCommand
 import com.koso.rx5sample.App
 import com.koso.rx5sample.R
 import com.koso.rx5sample.service.ConnectionService
@@ -36,6 +36,7 @@ class ConnectFragment : Fragment() {
         }
 
     }
+
 
     /**
      * Request turn on the BT when it's not available
@@ -99,6 +100,13 @@ class ConnectFragment : Fragment() {
         initViews()
     }
 
+    override fun onResume() {
+        super.onResume()
+        rx5?.let {
+            updateStateUi(it.stateLive.value)
+        }
+    }
+
     private fun initViews() {
         vStart.setOnClickListener {
 
@@ -123,7 +131,11 @@ class ConnectFragment : Fragment() {
                                 it.destory()
                             }
                             else -> {
-                                it.startDiscovery()
+//                                it.startDiscovery()
+                                val device = BluetoothAdapter.getDefaultAdapter()
+                                    .getRemoteDevice("00:1D:86:20:00:09")
+                                rx5?.cancelDiscovery()
+                                rx5?.connectAsClient(device)
                             }
                         }
                     }
@@ -134,28 +146,34 @@ class ConnectFragment : Fragment() {
 
     private fun subscribeStateEvent() {
         rx5?.stateLive?.observe(this, Observer{
-            when(it){
-                BaseBluetoothDevice.State.Disconnected -> {
-                    vStart.setText(R.string.disconnected)
-                    vStart.setBackgroundResource(R.drawable.ripple_oval_btn_disconnect)
-                }
-                BaseBluetoothDevice.State.Connected -> {
-                    vStart.setText(R.string.connected)
-
-                }
-                BaseBluetoothDevice.State.Discovering -> {
-                    vStart.setText(R.string.discovering)
-                    vStart.setBackgroundResource(R.drawable.ripple_oval_btn_progress)
-                }
-                BaseBluetoothDevice.State.Connecting -> {
-                    vStart.setText(R.string.connecting)
-                    vStart.setBackgroundResource(R.drawable.ripple_oval_btn_progress)
-                }
-                else ->{
-
-                }
-            }
+            viewModel.log(it.name)
+            updateStateUi(it)
         })
+    }
+
+    private fun updateStateUi(it: BaseBluetoothDevice.State?) {
+
+        when (it) {
+            BaseBluetoothDevice.State.Disconnected -> {
+                vStart.setText(R.string.disconnected)
+                vStart.setBackgroundResource(R.drawable.ripple_oval_btn_disconnect)
+            }
+            BaseBluetoothDevice.State.Connected -> {
+                vStart.setText(R.string.connected)
+                vStart.setBackgroundResource(R.drawable.ripple_oval_btn_connect)
+            }
+            BaseBluetoothDevice.State.Discovering -> {
+                vStart.setText(R.string.discovering)
+                vStart.setBackgroundResource(R.drawable.ripple_oval_btn_progress)
+            }
+            BaseBluetoothDevice.State.Connecting -> {
+                vStart.setText(R.string.connecting)
+                vStart.setBackgroundResource(R.drawable.ripple_oval_btn_progress)
+            }
+            else -> {
+
+            }
+        }
     }
 
 
@@ -168,7 +186,9 @@ class ConnectFragment : Fragment() {
                     d?.let {device ->
 
                         Log.d("rx5debug", "${device.name} ${device.address} found")
+
                         if (device.name == "Koso-BT") {
+                            viewModel.log("Koso-BT found")
                             it.cancelDiscovery()
                             it.connectAsClient(device)
                             vStart.text = "${device.name} found"
