@@ -56,6 +56,10 @@ class LogFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        vClear.setOnClickListener{
+            vLog.text = ""
+        }
         subscribeLogs()
+
     }
 }

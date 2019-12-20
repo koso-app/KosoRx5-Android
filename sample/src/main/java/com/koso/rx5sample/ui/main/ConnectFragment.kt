@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.koso.core.BaseBluetoothDevice
 import com.koso.core.Rx5
+import com.koso.core.util.Utility
 import com.koso.rx5sample.App
 import com.koso.rx5sample.R
 import com.koso.rx5sample.service.ConnectionService
@@ -63,6 +64,11 @@ class ConnectFragment : Fragment() {
     private val compositeDisposable = CompositeDisposable()
 
     /**
+     * The buffer of the incoming byte from Bluetooth
+     */
+    private var incomingByte = byteArrayOf()
+
+    /**
      * The connection state call back for ConnectionService
      */
     private val connection = object : ServiceConnection {
@@ -76,11 +82,24 @@ class ConnectFragment : Fragment() {
             service?.let {
                 rx5 = it.rx5
 
-
                 defaultConnect()
                 subscribeStateEvent()
                 subscribeDevices()
+
             }
+        }
+    }
+
+    private fun subscribeByteStream() {
+        val dispo = rx5?.observeByteStream()
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribeOn(Schedulers.io())
+            ?.subscribe({
+                viewModel.log("received byte: ${Utility.bytesToHex(byteArrayOf(it))}")
+            }, {})
+
+        dispo?.let{
+            compositeDisposable.add(it)
         }
     }
 
@@ -134,7 +153,8 @@ class ConnectFragment : Fragment() {
 
                         when(it.stateLive.value){
                             BaseBluetoothDevice.State.Connected -> {
-                                it.destory()
+                                service?.stopSelf()
+                                service = null
                             }
                             BaseBluetoothDevice.State.Discovering -> {
                                 it.cancelDiscovery()
@@ -157,6 +177,9 @@ class ConnectFragment : Fragment() {
         rx5?.stateLive?.observe(this, Observer{
             viewModel.log(it.name)
             updateStateUi(it)
+            if(it == BaseBluetoothDevice.State.Connected){
+                subscribeByteStream()
+            }
         })
     }
 
@@ -170,6 +193,7 @@ class ConnectFragment : Fragment() {
             BaseBluetoothDevice.State.Connected -> {
                 vStart.setText(R.string.connected)
                 vStart.setBackgroundResource(R.drawable.ripple_oval_btn_connect)
+
             }
             BaseBluetoothDevice.State.Discovering -> {
                 vStart.setText(R.string.discovering)

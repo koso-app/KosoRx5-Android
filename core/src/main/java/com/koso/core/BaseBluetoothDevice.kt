@@ -57,6 +57,9 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
         observeDiscoverState()
     }
 
+    /**
+     * Observe the discover state, will be ACTION_DISCOVERY_STARTED, ACTION_DISCOVERY_FINISHED
+     */
     private fun observeDiscoverState() {
         val dispo = rxBluetooth.observeDiscovery()
             .observeOn(AndroidSchedulers.mainThread())
@@ -75,7 +78,6 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
         compositeDisposable.add(dispo)
 
     }
-
 
     /**
      * Return true if Bluetooth is available.
@@ -220,7 +222,6 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
 
     fun disconnect(){
         btConnection?.closeConnection()
-
     }
 
     open fun destory() {
