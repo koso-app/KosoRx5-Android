@@ -17,7 +17,7 @@ import com.koso.core.Rx5
 import com.koso.core.command.NaviInfoCommand
 import com.koso.rx5sample.App
 import com.koso.rx5sample.R
-import com.koso.rx5sample.service.ConnectionService
+import com.koso.core.ConnectionService
 import kotlinx.android.synthetic.main.fragment_navicommands.*
 
 /**
@@ -28,11 +28,6 @@ class NaviCommandsFragment : Fragment() {
 
     private lateinit var viewmodel: TabbedViewModel
 
-    /**
-     *
-     */
-    private var rx5: Rx5? = null
-
 
     private var service: ConnectionService? = null
 
@@ -41,21 +36,19 @@ class NaviCommandsFragment : Fragment() {
      */
     private val connection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
-            rx5 = null
             service = null
         }
 
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
             service = (binder as ConnectionService.ConnectServiceBinder).service
             service?.let {
-                rx5 = it.rx5
                 subscribeStateEvent()
             }
         }
     }
 
     private fun subscribeStateEvent() {
-        rx5?.stateLive?.observe(this, Observer {
+        Rx5.instance?.stateLive?.observe(this, Observer {
             when (it) {
                 BaseBluetoothDevice.State.Disconnected -> {
 
@@ -130,8 +123,8 @@ class NaviCommandsFragment : Fragment() {
                 gpsnum,
                 gpsdir
             )
-            if(rx5 != null) {
-                rx5!!.write(cmd)
+            if(Rx5.instance != null) {
+                Rx5.instance!!.write(cmd)
                 viewmodel.log(cmd.toString())
             }
 

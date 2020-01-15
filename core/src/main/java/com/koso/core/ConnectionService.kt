@@ -1,4 +1,4 @@
-package com.koso.rx5sample.service
+package com.koso.core
 
 import android.annotation.TargetApi
 import android.app.*
@@ -7,15 +7,30 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Binder
 import android.os.Build
-import android.os.IBinder
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.koso.core.Rx5
-import com.koso.rx5sample.R
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.Observer
 
 
-class ConnectionService : Service() {
+class ConnectionService : LifecycleService() {
+
+
+    companion object{
+        private val EXTRA_STOP = "extra_stop"
+
+        fun startService(context: Context){
+            context.startService(Intent(context, ConnectionService::class.java))
+        }
+
+        fun stopService(context: Context){
+            val intent = Intent(context, ConnectionService::class.java)
+            intent.putExtra(EXTRA_STOP, true)
+            context.startService(intent)
+        }
+    }
+
 
     /**
      * Channel id to build Notification
@@ -25,21 +40,32 @@ class ConnectionService : Service() {
      * The id parameter for startForground()
      */
     private val ONGOING_NOTIFICATION_ID = 13
-    /**
-     * Binder given to clients
-     */
-    private val binder: IBinder = ConnectServiceBinder()
 
     /**
      * The connection manager
      */
-    val rx5 = Rx5(this)
+    private lateinit var rx5: Rx5
 
-    override fun onBind(intent: Intent): IBinder {
-        postOngoingNotification()
-        return binder
+
+    private val connectionStateObserver = Observer<BaseBluetoothDevice.State> {
+        when (it) {
+            BaseBluetoothDevice.State.Disconnected -> {
+                stopSelf()
+            }
+            BaseBluetoothDevice.State.Connected -> {
+
+            }
+            BaseBluetoothDevice.State.Connecting -> {
+
+            }
+            BaseBluetoothDevice.State.Discovering -> {
+
+            }
+            else -> {
+
+            }
+        }
     }
-
     /**
      * Class used for the client Binder.  Because we know this service always
      * runs in the same process as its clients, we don't need to deal with IPC.
@@ -49,9 +75,26 @@ class ConnectionService : Service() {
         val service: ConnectionService = this@ConnectionService
     }
 
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        postOngoingNotification()
+        super.onStartCommand(intent, flags, startId)
+        if(intent != null && intent.getBooleanExtra(EXTRA_STOP, false)){
+            stopSelf()
+        }else {
+            rx5 = Rx5.instantiation(this)
+            if (rx5.stateLive.value == BaseBluetoothDevice.State.Disconnected) {
+                rx5.connectAsServer()
+            }
+            registerConnectionState()
+            postOngoingNotification()
+        }
+
+
         return START_NOT_STICKY
+    }
+
+    private fun registerConnectionState() {
+        rx5.stateLive.observe(this, connectionStateObserver)
     }
 
     override fun onDestroy() {

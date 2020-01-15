@@ -16,11 +16,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.koso.core.BaseBluetoothDevice
+import com.koso.core.ConnectionService
 import com.koso.core.Rx5
 import com.koso.core.util.Utility
 import com.koso.rx5sample.App
 import com.koso.rx5sample.R
-import com.koso.rx5sample.service.ConnectionService
 import com.koso.rx5sample.utils.SharedPreferenceHandler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -50,11 +50,6 @@ class ConnectFragment : Fragment() {
      */
     private lateinit var viewModel: TabbedViewModel
 
-    /**
-     *
-     */
-    private var rx5: Rx5? = null
-
 
     private var service: ConnectionService? = null
 
@@ -68,31 +63,9 @@ class ConnectFragment : Fragment() {
      */
     private var incomingByte = byteArrayOf()
 
-    /**
-     * The connection state call back for ConnectionService
-     */
-    private val connection = object : ServiceConnection {
-        override fun onServiceDisconnected(name: ComponentName?) {
-            rx5 = null
-            service = null
-        }
-
-        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-
-            service = (binder as ConnectionService.ConnectServiceBinder).service
-            service?.let {
-                rx5 = it.rx5
-
-//                connectAsServer()
-                subscribeStateEvent()
-//                subscribeDevices()
-
-            }
-        }
-    }
 
     private fun subscribeByteStream() {
-        val dispo = rx5?.observeStringStream()
+        val dispo = Rx5.instance?.observeStringStream()
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribeOn(Schedulers.io())
             ?.subscribe({
@@ -105,23 +78,21 @@ class ConnectFragment : Fragment() {
     }
 
     private fun connectAsServer(){
-        rx5?.connectAsServer()
+        activity?.startService(Intent(activity, ConnectionService::class.java))
+        Rx5.connect(activity!!)
     }
 
     private fun connectAsClient() {
 
         val device = BluetoothAdapter.getDefaultAdapter()
             .getRemoteDevice(SharedPreferenceHandler.targetMacAddress)
-        rx5?.cancelDiscovery()
-        rx5?.connectAsClient(device)
+        Rx5.instance?.cancelDiscovery()
+        Rx5.instance?.connectAsClient(device)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(TabbedViewModel::class.java)
-
-        val intent = Intent(App.instance, ConnectionService::class.java)
-        App.instance.bindService(intent, connection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onCreateView(
@@ -138,7 +109,7 @@ class ConnectFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        rx5?.let {
+        Rx5.instance?.let {
             updateStateUi(it.stateLive.value)
         }
     }
@@ -146,7 +117,7 @@ class ConnectFragment : Fragment() {
     private fun initViews() {
         vStart.setOnClickListener {
 
-            rx5?.let {
+            Rx5.instance?.let {
                 if (!it.isBluetoothAvailable()) {
                     // handle the lack of bluetooth support
                 } else {
@@ -158,7 +129,7 @@ class ConnectFragment : Fragment() {
 
                         when(it.stateLive.value){
                             BaseBluetoothDevice.State.Connected -> {
-                                App.instance.unbindService(connection)
+                                Rx5.disconnect(activity!!)
                                 service = null
                             }
                             BaseBluetoothDevice.State.Discovering -> {
@@ -179,7 +150,7 @@ class ConnectFragment : Fragment() {
     }
 
     private fun subscribeStateEvent() {
-        rx5?.stateLive?.observe(this, Observer{
+        Rx5.instance?.stateLive?.observe(this, Observer{
             viewModel.log(it.name)
             updateStateUi(it)
             if(it == BaseBluetoothDevice.State.Connected){
@@ -216,7 +187,7 @@ class ConnectFragment : Fragment() {
 
 
     private fun subscribeDevices() {
-        rx5?.let {
+        Rx5.instance?.let {
             val disposable = it.observeDevices()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.computation())
