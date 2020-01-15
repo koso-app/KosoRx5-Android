@@ -212,12 +212,13 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
     }
 
 
-    fun write(cmd: BaseCommand){
-        write(cmd.encode())
+    fun write(cmd: BaseCommand): Boolean{
+        return write(cmd.encode())
     }
 
-    fun write(bytes: ByteArray) {
-        btConnection?.send(bytes)
+    fun write(bytes: ByteArray): Boolean {
+        if (btConnection == null) return false
+        return btConnection?.send(bytes) ?: false
     }
 
     fun disconnect(){

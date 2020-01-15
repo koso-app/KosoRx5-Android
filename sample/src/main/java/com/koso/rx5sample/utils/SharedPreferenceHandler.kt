@@ -1,8 +1,7 @@
 package com.koso.rx5sample.utils
 
+import android.content.Context
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
-
 import com.koso.rx5sample.App
 import com.koso.rx5sample.R
 
@@ -19,7 +18,7 @@ class SharedPreferenceHandler {
          *  To get the default SharedPreferences
          */
         fun getSharedPrefences(): SharedPreferences {
-            return PreferenceManager.getDefaultSharedPreferences(App.instance)
+            return App.instance.getSharedPreferences("rx5_pref", Context.MODE_PRIVATE)
         }
 
         /**
