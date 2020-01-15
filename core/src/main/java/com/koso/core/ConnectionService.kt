@@ -41,10 +41,6 @@ class ConnectionService : LifecycleService() {
      */
     private val ONGOING_NOTIFICATION_ID = 13
 
-    /**
-     * The connection manager
-     */
-    private lateinit var rx5: Rx5
 
 
     private val connectionStateObserver = Observer<BaseBluetoothDevice.State> {
@@ -53,10 +49,9 @@ class ConnectionService : LifecycleService() {
                 stopSelf()
             }
             BaseBluetoothDevice.State.Connected -> {
-
+                postOngoingNotification()
             }
             BaseBluetoothDevice.State.Connecting -> {
-
             }
             BaseBluetoothDevice.State.Discovering -> {
 
@@ -81,25 +76,27 @@ class ConnectionService : LifecycleService() {
         if(intent != null && intent.getBooleanExtra(EXTRA_STOP, false)){
             stopSelf()
         }else {
-            rx5 = Rx5.instantiation(this)
-            if (rx5.stateLive.value == BaseBluetoothDevice.State.Disconnected) {
-                rx5.connectAsServer()
-            }
-            registerConnectionState()
-            postOngoingNotification()
-        }
 
+            if (Rx5Handler.rx5 == null) {
+                Rx5Handler.rx5 = BaseBluetoothDevice(this)
+                registerConnectionState()
+            }
+
+            if (Rx5Handler.stateLiveData.value == BaseBluetoothDevice.State.Disconnected) {
+                Rx5Handler.rx5!!.connectAsServer()
+            }
+        }
 
         return START_NOT_STICKY
     }
 
     private fun registerConnectionState() {
-        rx5.stateLive.observe(this, connectionStateObserver)
+        Rx5Handler.stateLiveData.observe(this, connectionStateObserver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        rx5.destory()
+        Rx5Handler.rx5?.destory()
     }
 
     private fun postOngoingNotification() {

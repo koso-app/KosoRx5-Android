@@ -13,11 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.koso.core.BaseBluetoothDevice
-import com.koso.core.Rx5
+import com.koso.core.ConnectionService
+import com.koso.core.Rx5Handler
 import com.koso.core.command.NaviInfoCommand
 import com.koso.rx5sample.App
 import com.koso.rx5sample.R
-import com.koso.core.ConnectionService
 import kotlinx.android.synthetic.main.fragment_navicommands.*
 
 /**
@@ -48,7 +48,7 @@ class NaviCommandsFragment : Fragment() {
     }
 
     private fun subscribeStateEvent() {
-        Rx5.instance?.stateLive?.observe(this, Observer {
+        Rx5Handler.stateLiveData.observe(this, Observer {
             when (it) {
                 BaseBluetoothDevice.State.Disconnected -> {
 
@@ -72,9 +72,6 @@ class NaviCommandsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewmodel = ViewModelProviders.of(activity!!).get(TabbedViewModel::class.java)
-
-        val intent = Intent(App.instance, ConnectionService::class.java)
-        App.instance.bindService(intent, connection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onCreateView(
@@ -123,11 +120,12 @@ class NaviCommandsFragment : Fragment() {
                 gpsnum,
                 gpsdir
             )
-            if(Rx5.instance != null) {
-                Rx5.instance!!.write(cmd)
-                viewmodel.log(cmd.toString())
+            Rx5Handler.rx5?.apply {
+                val ok = write(cmd)
+                if (ok) {
+                    viewmodel.log(cmd.toString())
+                }
             }
-
         }
     }
 

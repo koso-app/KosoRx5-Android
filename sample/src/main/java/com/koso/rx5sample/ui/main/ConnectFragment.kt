@@ -1,26 +1,23 @@
 package com.koso.rx5sample.ui.main
 
-import android.app.Activity
 import android.bluetooth.BluetoothAdapter
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.koso.core.BaseBluetoothDevice
 import com.koso.core.ConnectionService
-import com.koso.core.Rx5
+import com.koso.core.Rx5Handler
 import com.koso.core.util.Utility
-import com.koso.rx5sample.App
 import com.koso.rx5sample.R
+import com.koso.rx5sample.utils.BluetoothUtil
 import com.koso.rx5sample.utils.SharedPreferenceHandler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -51,8 +48,6 @@ class ConnectFragment : Fragment() {
     private lateinit var viewModel: TabbedViewModel
 
 
-    private var service: ConnectionService? = null
-
     /**
      * Handles all observable disposables
      */
@@ -65,7 +60,7 @@ class ConnectFragment : Fragment() {
 
 
     private fun subscribeByteStream() {
-        val dispo = Rx5.instance?.observeStringStream()
+        val dispo = Rx5Handler.rx5?.observeStringStream()
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribeOn(Schedulers.io())
             ?.subscribe({
@@ -75,19 +70,6 @@ class ConnectFragment : Fragment() {
         dispo?.let{
             compositeDisposable.add(it)
         }
-    }
-
-    private fun connectAsServer(){
-        activity?.startService(Intent(activity, ConnectionService::class.java))
-        Rx5.connect(activity!!)
-    }
-
-    private fun connectAsClient() {
-
-        val device = BluetoothAdapter.getDefaultAdapter()
-            .getRemoteDevice(SharedPreferenceHandler.targetMacAddress)
-        Rx5.instance?.cancelDiscovery()
-        Rx5.instance?.connectAsClient(device)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,48 +91,42 @@ class ConnectFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Rx5.instance?.let {
-            updateStateUi(it.stateLive.value)
-        }
+        subscribeStateEvent()
+        updateStateUi(BaseBluetoothDevice.stateLive.value)
     }
 
     private fun initViews() {
         vStart.setOnClickListener {
 
-            Rx5.instance?.let {
-                if (!it.isBluetoothAvailable()) {
+            if (!BluetoothUtil.checkAndRequestBluetooth(
+                    activity as AppCompatActivity,
+                    REQUEST_ENABLE_BT
+                )
+            ) {
                     // handle the lack of bluetooth support
                 } else {
-                    // check if bluetooth is currently enabled and ready for use
-                    if (!it.isBluetoothEnabled()) {
-                        // to enable bluetooth via startActivityForResult()
-                        it.enableBluetooth(activity as Activity, REQUEST_ENABLE_BT);
-                    } else {
 
-                        when(it.stateLive.value){
-                            BaseBluetoothDevice.State.Connected -> {
-                                Rx5.disconnect(activity!!)
-                                service = null
-                            }
-                            BaseBluetoothDevice.State.Discovering -> {
-                                it.cancelDiscovery()
-                            }
-                            BaseBluetoothDevice.State.Connecting -> {
-                                it.destory()
-                            }
-                            else -> {
-//                                it.startDiscovery()
-                                connectAsServer()
-                            }
+
+                when (BaseBluetoothDevice.stateLive.value) {
+                    BaseBluetoothDevice.State.Connected -> {
+                        Rx5Handler.stopConnectService(activity!!)
+                    }
+                    BaseBluetoothDevice.State.Discovering -> {
+                        Rx5Handler.rx5?.cancelDiscovery()
+                    }
+                    BaseBluetoothDevice.State.Connecting -> {
+                        Rx5Handler.rx5?.destory()
+                    }
+                    else -> {
+                        Rx5Handler.startConnectService(activity as Context)
                         }
                     }
-                }
             }
         }
     }
 
     private fun subscribeStateEvent() {
-        Rx5.instance?.stateLive?.observe(this, Observer{
+        BaseBluetoothDevice.stateLive.observe(this, Observer {
             viewModel.log(it.name)
             updateStateUi(it)
             if(it == BaseBluetoothDevice.State.Connected){
@@ -183,33 +159,6 @@ class ConnectFragment : Fragment() {
 
             }
         }
-    }
-
-
-    private fun subscribeDevices() {
-        Rx5.instance?.let {
-            val disposable = it.observeDevices()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.computation())
-                .subscribe({d ->
-                    d?.let {device ->
-
-                        Log.d("rx5debug", "${device.name} ${device.address} found")
-
-                        if (device.name == "Koso-BT") {
-                            viewModel.log("Koso-BT found")
-                            it.cancelDiscovery()
-                            it.connectAsClient(device)
-                            vStart.text = "${device.name} found"
-                        }
-                    }
-                }, {t ->
-                    t.printStackTrace()
-                })
-
-            compositeDisposable.add(disposable)
-        }
-
     }
 
     override fun onDestroy() {

@@ -3,7 +3,7 @@
     <string name="disconnected">Disconnected</string>
     <string name="connected">Connected</string>
     <string name="discovering">Searching...</string>
-    <string name="connecting">Connecting...</string>
+    <string name="connecting">Server waiting...</string>
     <string name="title_activity_tabbed">TabbedActivity</string>
     <string name="tab_text_1">Connection</string>
     <string name="tab_text_2">Navigation Command</string>

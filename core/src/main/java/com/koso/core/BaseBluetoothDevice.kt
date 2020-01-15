@@ -1,9 +1,7 @@
 package com.koso.core
 
-import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -16,16 +14,30 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.io.IOException
 import java.util.*
 
-abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
+class BaseBluetoothDevice(
+    context: Context,
+    val SERVICE_UUID: String = "00001101-0000-1000-8000-00805F9B34FB"
+) {
 
     enum class State {
         Disconnected, Discovering, Connected, Connecting
     }
 
+    companion object {
+        /**
+         * Inner LiveData for updating the state observable value
+         */
+        private val _stateLive: MutableLiveData<State> = MutableLiveData<State>().apply {
+            this.value = State.Disconnected
+        }
 
+        /**
+         * External LiveData for accessing the latest state
+         */
+        val stateLive: LiveData<State> = _stateLive
+    }
     /**
      * The Bluetooth handler based on RxJava
      */
@@ -34,19 +46,6 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
 
     private var btConnection: BluetoothConnection? = null
 
-
-    /**
-     * Inner LiveData for updating the state observable value
-     */
-    private val _stateLive: MutableLiveData<State> = MutableLiveData<State>().apply{
-        this.value = State.Disconnected
-    }
-
-    /**
-     * External LiveData for accessing the latest state
-     */
-    val stateLive: LiveData<State> = _stateLive
-
     /**
      * Collection of Rx disposable
      */
@@ -54,6 +53,7 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
 
     init {
         observeAclEvent()
+        observeConnectionState()
         observeDiscoverState()
     }
 
@@ -77,47 +77,6 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
 
         compositeDisposable.add(dispo)
 
-    }
-
-    /**
-     * Return true if Bluetooth is available.
-     *
-     * @return true if bluetoothAdapter is not null or it's address is empty, otherwise Bluetooth is
-     * not supported on this hardware platform
-     */
-    fun isBluetoothAvailable(): Boolean {
-        return rxBluetooth.isBluetoothAvailable
-    }
-
-    /**
-     * Return true if Bluetooth is currently enabled and ready for use.
-     *
-     * Requires [android.Manifest.permission.BLUETOOTH]
-     *
-     * @return true if the local adapter is turned on
-     */
-    fun isBluetoothEnabled(): Boolean {
-        return rxBluetooth.isBluetoothEnabled
-    }
-
-    /**
-     * Return true if a location service is enabled.
-     *
-     * @return true if either the GPS or Network provider is enabled
-     */
-    fun isLocationServiceEnabled(): Boolean {
-        return rxBluetooth.isLocationServiceEnabled
-    }
-
-    /**
-     * This will issue a request to enable Bluetooth through the system settings (without stopping
-     * your application) via ACTION_REQUEST_ENABLE action Intent.
-     *
-     * @param activity Activity
-     * @param requestCode request code
-     */
-    fun enableBluetooth(activity: Activity, requestCode: Int) {
-        rxBluetooth.enableBluetooth(activity, requestCode)
     }
 
     /**
@@ -154,40 +113,6 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
         rxBluetooth.cancelDiscovery()
     }
 
-    /**
-     * Create connection to [BluetoothDevice] and returns a connected [BluetoothSocket]
-     * on successful connection. Notifies observers with [IOException] via `onError()`.
-     *
-     * @param bluetoothDevice bluetooth device to connect
-     * @param uuid uuid for SDP record
-     * @return Single with connected [BluetoothSocket] on successful connection
-     */
-    open fun connectAsClient(
-        bluetoothDevice: BluetoothDevice
-    ) {
-        val uuid = UUID.fromString(SERVICE_UUID)
-        val disposable = rxBluetooth.connectAsClient(bluetoothDevice, uuid)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe({
-                btConnection = BluetoothConnection(it)
-                btConnection?.observeByteStream()!!
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe({
-                        Log.d("rx5debug", it.toString())
-                    }, {
-                        it.printStackTrace()
-                    })
-                _stateLive.value = State.Connected
-            }, { t ->
-                t.printStackTrace()
-                _stateLive.value = State.Disconnected
-            })
-
-        _stateLive.value = State.Connecting
-        compositeDisposable.add(disposable)
-    }
 
     open fun connectAsServer(){
         val uuid = UUID.fromString(SERVICE_UUID)
@@ -214,7 +139,34 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
         compositeDisposable.add(disposable)
     }
 
+    private fun observeConnectionState() {
+        val dispo = rxBluetooth.observeConnectionState()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe({
+                when (it.state) {
+                    BluetoothAdapter.STATE_DISCONNECTED -> {
+                        _stateLive.value = State.Disconnected
+                    }
+                    BluetoothAdapter.STATE_CONNECTING -> {
+                        _stateLive.value = State.Connecting
+                    }
+                    BluetoothAdapter.STATE_CONNECTED -> {
+                        _stateLive.value = State.Connected
+                    }
+                    BluetoothAdapter.STATE_DISCONNECTING -> {
+
+                    }
+
+                }
+            }, { t ->
+                t.printStackTrace()
+            })
+        compositeDisposable.add(dispo)
+    }
+
     private fun observeAclEvent() {
+
         val dispo = rxBluetooth.observeAclEvent()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.computation())
