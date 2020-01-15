@@ -14,7 +14,7 @@
         android:text="@string/connect"
         android:gravity="center"
         android:textAllCaps="true"
-        android:background="@drawable/ripple_oval_btn_progress"
+        android:background="@drawable/ripple_oval_btn_disconnect"
         android:textColor="@color/btnTextColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

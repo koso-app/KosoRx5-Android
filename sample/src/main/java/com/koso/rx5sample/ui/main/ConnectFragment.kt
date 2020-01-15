@@ -78,24 +78,25 @@ class ConnectFragment : Fragment() {
         }
 
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+
             service = (binder as ConnectionService.ConnectServiceBinder).service
             service?.let {
                 rx5 = it.rx5
 
-                defaultConnect()
+//                connectAsServer()
                 subscribeStateEvent()
-                subscribeDevices()
+//                subscribeDevices()
 
             }
         }
     }
 
     private fun subscribeByteStream() {
-        val dispo = rx5?.observeByteStream()
+        val dispo = rx5?.observeStringStream()
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribeOn(Schedulers.io())
             ?.subscribe({
-                viewModel.log("received byte: ${Utility.bytesToHex(byteArrayOf(it))}")
+                viewModel.log("received byte: ${Utility.bytesToHex(it.toByteArray())}")
             }, {})
 
         dispo?.let{
@@ -103,7 +104,11 @@ class ConnectFragment : Fragment() {
         }
     }
 
-    private fun defaultConnect() {
+    private fun connectAsServer(){
+        rx5?.connectAsServer()
+    }
+
+    private fun connectAsClient() {
 
         val device = BluetoothAdapter.getDefaultAdapter()
             .getRemoteDevice(SharedPreferenceHandler.targetMacAddress)
@@ -153,7 +158,7 @@ class ConnectFragment : Fragment() {
 
                         when(it.stateLive.value){
                             BaseBluetoothDevice.State.Connected -> {
-                                service?.stopSelf()
+                                App.instance.unbindService(connection)
                                 service = null
                             }
                             BaseBluetoothDevice.State.Discovering -> {
@@ -164,7 +169,7 @@ class ConnectFragment : Fragment() {
                             }
                             else -> {
 //                                it.startDiscovery()
-                                defaultConnect()
+                                connectAsServer()
                             }
                         }
                     }

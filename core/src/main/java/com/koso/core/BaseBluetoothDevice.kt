@@ -189,6 +189,31 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
         compositeDisposable.add(disposable)
     }
 
+    open fun connectAsServer(){
+        val uuid = UUID.fromString(SERVICE_UUID)
+        val disposable = rxBluetooth.connectAsServer("Rx5", uuid )
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe({
+                btConnection = BluetoothConnection(it)
+                btConnection?.observeByteStream()!!
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        Log.d("rx5debug", it.toString())
+                    }, {
+                        it.printStackTrace()
+                    })
+                _stateLive.value = State.Connected
+            },{ t ->
+                t.printStackTrace()
+                _stateLive.value = State.Disconnected
+            })
+
+        _stateLive.value = State.Connecting
+        compositeDisposable.add(disposable)
+    }
+
     private fun observeAclEvent() {
         val dispo = rxBluetooth.observeAclEvent()
             .observeOn(AndroidSchedulers.mainThread())
@@ -223,6 +248,7 @@ abstract class BaseBluetoothDevice(context: Context, val SERVICE_UUID: String) {
 
     fun disconnect(){
         btConnection?.closeConnection()
+        _stateLive.value = State.Disconnected
     }
 
     open fun destory() {
