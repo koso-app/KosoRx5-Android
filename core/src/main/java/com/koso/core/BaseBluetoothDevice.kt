@@ -2,10 +2,11 @@ package com.koso.core
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.github.ivbaranov.rxbluetooth.BluetoothConnection
 import com.github.ivbaranov.rxbluetooth.RxBluetooth
 import com.koso.core.command.BaseCommand
@@ -16,8 +17,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
+
 class BaseBluetoothDevice(
-    context: Context,
+    val context: Context,
     val SERVICE_UUID: String = "00001101-0000-1000-8000-00805F9B34FB"
 ) {
 
@@ -25,19 +27,6 @@ class BaseBluetoothDevice(
         Disconnected, Discovering, Connected, Connecting
     }
 
-    companion object {
-        /**
-         * Inner LiveData for updating the state observable value
-         */
-        private val _stateLive: MutableLiveData<State> = MutableLiveData<State>().apply {
-            this.value = State.Disconnected
-        }
-
-        /**
-         * External LiveData for accessing the latest state
-         */
-        val stateLive: LiveData<State> = _stateLive
-    }
     /**
      * The Bluetooth handler based on RxJava
      */
@@ -51,10 +40,50 @@ class BaseBluetoothDevice(
      */
     private val compositeDisposable = CompositeDisposable()
 
+    /**
+     * Receiver for bluetooth disconnect
+     */
+    val bluetoothReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            if (action != null && action == BluetoothAdapter.ACTION_STATE_CHANGED) {
+                val state = intent.getIntExtra(
+                    BluetoothAdapter.EXTRA_STATE,
+                    BluetoothAdapter.ERROR
+                )
+                when (state) {
+                    BluetoothAdapter.STATE_OFF -> {
+                        Rx5Handler.setState(State.Disconnected)
+                    }
+                }
+            }
+            if (action != null && action == BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED) {
+
+            }
+            if (action != null && action == BluetoothDevice.ACTION_ACL_DISCONNECTED) {
+                Rx5Handler.setState(State.Disconnected)
+            }
+        }
+    }
+
     init {
-        observeAclEvent()
         observeConnectionState()
-        observeDiscoverState()
+        registerStateChange(context)
+    }
+
+    private fun unregisterDisconnect(context: Context){
+        context.unregisterReceiver(bluetoothReceiver)
+    }
+
+    private fun registerStateChange(context: Context) {
+
+        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+        val f1 = IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED)
+        val f2 = IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED)
+
+        context.registerReceiver(bluetoothReceiver, filter)
+        context.registerReceiver(bluetoothReceiver, f1)
+        context.registerReceiver(bluetoothReceiver, f2)
     }
 
     /**
@@ -67,10 +96,10 @@ class BaseBluetoothDevice(
             .subscribe({
                 when (it) {
                     BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
-                        _stateLive.value = State.Discovering
+                        Rx5Handler.setState(State.Discovering)
                     }
                     BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
-                        _stateLive.value = State.Disconnected
+
                     }
                 }
             }, {t -> t.printStackTrace()})
@@ -129,13 +158,13 @@ class BaseBluetoothDevice(
                     }, {
                         it.printStackTrace()
                     })
-                _stateLive.value = State.Connected
+                Rx5Handler.setState(State.Connected)
             },{ t ->
                 t.printStackTrace()
-                _stateLive.value = State.Disconnected
+                Rx5Handler.setState(State.Disconnected)
             })
 
-        _stateLive.value = State.Connecting
+        Rx5Handler.setState(State.Connecting)
         compositeDisposable.add(disposable)
     }
 
@@ -146,13 +175,10 @@ class BaseBluetoothDevice(
             .subscribe({
                 when (it.state) {
                     BluetoothAdapter.STATE_DISCONNECTED -> {
-                        _stateLive.value = State.Disconnected
+                        Rx5Handler.setState(State.Disconnected)
                     }
                     BluetoothAdapter.STATE_CONNECTING -> {
-                        _stateLive.value = State.Connecting
-                    }
-                    BluetoothAdapter.STATE_CONNECTED -> {
-                        _stateLive.value = State.Connected
+
                     }
                     BluetoothAdapter.STATE_DISCONNECTING -> {
 
@@ -180,7 +206,7 @@ class BaseBluetoothDevice(
 
                     }
                     BluetoothDevice.ACTION_ACL_DISCONNECTED -> {
-                        _stateLive.value = State.Disconnected
+                        Rx5Handler.setState(State.Disconnected)
                     }
                 }
             }, {t -> t.printStackTrace()})
@@ -198,14 +224,16 @@ class BaseBluetoothDevice(
         return btConnection?.send(bytes) ?: false
     }
 
-    fun disconnect(){
+    private fun disconnect(){
         btConnection?.closeConnection()
-        _stateLive.value = State.Disconnected
+        btConnection = null
     }
 
     open fun destory() {
+        unregisterDisconnect(context = context)
         disconnect()
         cancelDiscovery()
         compositeDisposable.clear()
+        Rx5Handler.setState(State.Disconnected)
     }
 }

@@ -48,7 +48,7 @@ class NaviCommandsFragment : Fragment() {
     }
 
     private fun subscribeStateEvent() {
-        Rx5Handler.stateLiveData.observe(this, Observer {
+        Rx5Handler.stateLive.observe(this, Observer {
             when (it) {
                 BaseBluetoothDevice.State.Disconnected -> {
 
@@ -120,11 +120,16 @@ class NaviCommandsFragment : Fragment() {
                 gpsnum,
                 gpsdir
             )
-            Rx5Handler.rx5?.apply {
-                val ok = write(cmd)
+
+            if(Rx5Handler.rx5 != null) {
+                val ok = Rx5Handler.rx5!!.write(cmd)
                 if (ok) {
                     viewmodel.log(cmd.toString())
+                }else{
+                    viewmodel.log("Send command fail, connection is not available")
                 }
+            }else{
+                viewmodel.log("Send command fail, connection is not available")
             }
         }
     }

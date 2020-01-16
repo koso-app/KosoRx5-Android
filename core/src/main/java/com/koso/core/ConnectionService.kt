@@ -79,11 +79,12 @@ class ConnectionService : LifecycleService() {
 
             if (Rx5Handler.rx5 == null) {
                 Rx5Handler.rx5 = BaseBluetoothDevice(this)
-                registerConnectionState()
+
             }
 
-            if (Rx5Handler.stateLiveData.value == BaseBluetoothDevice.State.Disconnected) {
+            if (Rx5Handler.stateLive.value == BaseBluetoothDevice.State.Disconnected) {
                 Rx5Handler.rx5!!.connectAsServer()
+                registerConnectionState()
             }
         }
 
@@ -91,17 +92,17 @@ class ConnectionService : LifecycleService() {
     }
 
     private fun registerConnectionState() {
-        Rx5Handler.stateLiveData.observe(this, connectionStateObserver)
+        Rx5Handler.stateLive.observe(this, connectionStateObserver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Rx5Handler.rx5?.destory()
+        Rx5Handler.destory()
     }
 
     private fun postOngoingNotification() {
         val pendingIntent: PendingIntent =
-            Intent("com.wrstudio.msda.action.VIEW").let { notificationIntent ->
+            Intent("com.koso.rx5.action.VIEW").let { notificationIntent ->
                 PendingIntent.getActivity(this, 0, notificationIntent, 0)
             }
 

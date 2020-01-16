@@ -2,15 +2,12 @@ package com.koso.rx5sample
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.koso.rx5sample.ui.main.SectionsPagerAdapter
-import com.koso.rx5sample.ui.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_tabbed.*
 
 class TabbedActivity : AppCompatActivity() {
@@ -22,19 +19,6 @@ class TabbedActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tabbed)
 
         initViews()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_tabbed_activity, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.settings){
-            SettingsActivity.launch(this)
-            return true
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun initViews() {

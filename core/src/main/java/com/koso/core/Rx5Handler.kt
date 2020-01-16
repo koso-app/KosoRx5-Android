@@ -1,14 +1,25 @@
 package com.koso.core
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 object Rx5Handler{
 
 
     /**
-     * Observable connection state
+     * Inner LiveData for updating the state observable value
      */
-    val stateLiveData = BaseBluetoothDevice.stateLive
+    private val _stateLive: MutableLiveData<BaseBluetoothDevice.State> =
+        MutableLiveData<BaseBluetoothDevice.State>().apply {
+            this.value = BaseBluetoothDevice.State.Disconnected
+        }
+
+    /**
+     * External LiveData for accessing the latest state
+     */
+    val stateLive: LiveData<BaseBluetoothDevice.State> = _stateLive
+
 
     var rx5: BaseBluetoothDevice? = null
 
@@ -24,6 +35,16 @@ object Rx5Handler{
      */
     fun stopConnectService(context: Context){
         ConnectionService.stopService(context)
+    }
+
+    fun destory() {
+        rx5?.destory()
+        rx5 = null
+        setState(BaseBluetoothDevice.State.Disconnected)
+    }
+
+    fun setState(s: BaseBluetoothDevice.State) {
+        if (_stateLive.value != s) _stateLive.value = s
     }
 
 }

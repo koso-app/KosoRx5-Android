@@ -1,10 +1,7 @@
 package com.koso.rx5sample.ui.main
 
-import android.bluetooth.BluetoothAdapter
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.koso.core.BaseBluetoothDevice
-import com.koso.core.ConnectionService
 import com.koso.core.Rx5Handler
 import com.koso.core.util.Utility
 import com.koso.rx5sample.R
 import com.koso.rx5sample.utils.BluetoothUtil
-import com.koso.rx5sample.utils.SharedPreferenceHandler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -92,7 +87,7 @@ class ConnectFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         subscribeStateEvent()
-        updateStateUi(BaseBluetoothDevice.stateLive.value)
+        updateStateUi(Rx5Handler.stateLive.value)
     }
 
     private fun initViews() {
@@ -106,28 +101,24 @@ class ConnectFragment : Fragment() {
                     // handle the lack of bluetooth support
                 } else {
 
-
-                when (BaseBluetoothDevice.stateLive.value) {
+                when (Rx5Handler.stateLive.value) {
                     BaseBluetoothDevice.State.Connected -> {
                         Rx5Handler.stopConnectService(activity!!)
                     }
-                    BaseBluetoothDevice.State.Discovering -> {
-                        Rx5Handler.rx5?.cancelDiscovery()
-                    }
                     BaseBluetoothDevice.State.Connecting -> {
-                        Rx5Handler.rx5?.destory()
+                        Rx5Handler.stopConnectService(activity!!)
                     }
                     else -> {
                         Rx5Handler.startConnectService(activity as Context)
-                        }
                     }
+                 }
             }
         }
     }
 
     private fun subscribeStateEvent() {
-        BaseBluetoothDevice.stateLive.observe(this, Observer {
-            viewModel.log(it.name)
+        Rx5Handler.stateLive.observe(this, Observer {
+//            viewModel.log(it.name)
             updateStateUi(it)
             if(it == BaseBluetoothDevice.State.Connected){
                 subscribeByteStream()
