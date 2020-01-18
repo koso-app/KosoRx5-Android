@@ -40,7 +40,11 @@ class BaseBluetoothDevice(
      */
     private val compositeDisposable = CompositeDisposable()
 
+
+    private val delimiters = 0x55
+
     /**
+     *
      * Receiver for bluetooth disconnect
      */
     val bluetoothReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -124,7 +128,7 @@ class BaseBluetoothDevice(
 
     fun observeStringStream(): Flowable<String> {
         if (btConnection == null) throw NullPointerException("BluetoothConnection is not allowed to be null")
-        return btConnection!!.observeStringStream()
+        return btConnection!!.observeStringStream(delimiters)
     }
 
     /**

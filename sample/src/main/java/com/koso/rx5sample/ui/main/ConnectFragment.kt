@@ -53,16 +53,31 @@ class ConnectFragment : Fragment() {
      */
     private var incomingByte = byteArrayOf()
 
+    private var byteBuffer = arrayListOf<Byte>()
+
+
 
     private fun subscribeByteStream() {
-        val dispo = Rx5Handler.rx5?.observeStringStream()
+
+//        val dispo = Rx5Handler.rx5?.observeStringStream()
+//            ?.observeOn(AndroidSchedulers.mainThread())
+//            ?.subscribeOn(Schedulers.io())
+//            ?.subscribe({
+//                viewModel.log("received string: ${Utility.bytesToHex(it.toByteArray())}")
+//            }, {})
+
+        val dispo1 = Rx5Handler.rx5?.observeByteStream()
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribeOn(Schedulers.io())
             ?.subscribe({
-                viewModel.log("received byte: ${Utility.bytesToHex(it.toByteArray())}")
+                viewModel.log("received byte: ${Utility.bytesToHex(byteArrayOf(it))}")
             }, {})
 
-        dispo?.let{
+//        dispo?.let{
+//            compositeDisposable.add(it)
+//        }
+
+        dispo1?.let{
             compositeDisposable.add(it)
         }
     }
@@ -70,6 +85,7 @@ class ConnectFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(TabbedViewModel::class.java)
+        subscribeStateEvent()
     }
 
     override fun onCreateView(
@@ -86,7 +102,7 @@ class ConnectFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        subscribeStateEvent()
+
         updateStateUi(Rx5Handler.stateLive.value)
     }
 

@@ -1,4 +1,4 @@
-package com.koso.rx5sample
+package com.koso.rx5sample.ui.main
 
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -7,7 +7,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.koso.rx5sample.ui.main.SectionsPagerAdapter
+import com.koso.rx5sample.R
 import kotlinx.android.synthetic.main.activity_tabbed.*
 
 class TabbedActivity : AppCompatActivity() {
@@ -27,7 +27,7 @@ class TabbedActivity : AppCompatActivity() {
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
 
         val viewPager: ViewPager = findViewById(R.id.view_pager)
-        viewPager.offscreenPageLimit = 3
+        viewPager.offscreenPageLimit = 4
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)

@@ -20,7 +20,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".TabbedActivity"
+            android:name=".ui.main.TabbedActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>

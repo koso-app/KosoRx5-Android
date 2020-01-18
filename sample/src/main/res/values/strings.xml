@@ -7,7 +7,8 @@
     <string name="title_activity_tabbed">TabbedActivity</string>
     <string name="tab_text_1">Connection</string>
     <string name="tab_text_2">Navigation Command</string>
-    <string name="tab_text_3">Log</string>
+    <string name="tab_text_3">Free Command</string>
+    <string name="tab_text_4">Log</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
     <string name="send">Send</string>

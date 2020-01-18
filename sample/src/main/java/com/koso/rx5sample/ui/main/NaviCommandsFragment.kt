@@ -1,8 +1,6 @@
 package com.koso.rx5sample.ui.main
 
 import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
@@ -11,12 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.koso.core.BaseBluetoothDevice
 import com.koso.core.ConnectionService
 import com.koso.core.Rx5Handler
 import com.koso.core.command.NaviInfoCommand
-import com.koso.rx5sample.App
 import com.koso.rx5sample.R
 import kotlinx.android.synthetic.main.fragment_navicommands.*
 
@@ -71,7 +69,7 @@ class NaviCommandsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewmodel = ViewModelProviders.of(activity!!).get(TabbedViewModel::class.java)
+        viewmodel = ViewModelProvider(activity!!).get(TabbedViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -126,10 +124,10 @@ class NaviCommandsFragment : Fragment() {
                 if (ok) {
                     viewmodel.log(cmd.toString())
                 }else{
-                    viewmodel.log("Send command fail, connection is not available")
+                    viewmodel.log("Failed, connection is not available")
                 }
             }else{
-                viewmodel.log("Send command fail, connection is not available")
+                viewmodel.log("Failed, connection is not available")
             }
         }
     }
