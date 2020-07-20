@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.koso.core.BaseBluetoothDevice
-import com.koso.core.Rx5Handler
-import com.koso.core.util.Utility
+import com.koso.rx5.core.BaseBluetoothDevice
+import com.koso.rx5.core.Rx5Handler
+import com.koso.rx5.core.util.Utility
 import com.koso.rx5sample.R
 import com.koso.rx5sample.utils.BluetoothUtil
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_connect.*
  */
 class ConnectFragment : Fragment() {
 
-    companion object{
+    companion object {
         fun newInstance(): Fragment {
             return ConnectFragment()
         }
@@ -56,7 +56,6 @@ class ConnectFragment : Fragment() {
     private var byteBuffer = arrayListOf<Byte>()
 
 
-
     private fun subscribeByteStream() {
 
 //        val dispo = Rx5Handler.rx5?.observeStringStream()
@@ -77,7 +76,7 @@ class ConnectFragment : Fragment() {
 //            compositeDisposable.add(it)
 //        }
 
-        dispo1?.let{
+        dispo1?.let {
             compositeDisposable.add(it)
         }
     }
@@ -114,8 +113,8 @@ class ConnectFragment : Fragment() {
                     REQUEST_ENABLE_BT
                 )
             ) {
-                    // handle the lack of bluetooth support
-                } else {
+                // handle the lack of bluetooth support
+            } else {
 
                 when (Rx5Handler.stateLive.value) {
                     BaseBluetoothDevice.State.Connected -> {
@@ -127,7 +126,7 @@ class ConnectFragment : Fragment() {
                     else -> {
                         Rx5Handler.startConnectService(activity as Context)
                     }
-                 }
+                }
             }
         }
     }
@@ -136,7 +135,7 @@ class ConnectFragment : Fragment() {
         Rx5Handler.stateLive.observe(this, Observer {
 //            viewModel.log(it.name)
             updateStateUi(it)
-            if(it == BaseBluetoothDevice.State.Connected){
+            if (it == BaseBluetoothDevice.State.Connected) {
                 subscribeByteStream()
             }
         })

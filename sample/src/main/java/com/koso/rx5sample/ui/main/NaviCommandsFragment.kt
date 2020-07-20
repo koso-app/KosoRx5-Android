@@ -10,11 +10,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import com.koso.core.BaseBluetoothDevice
-import com.koso.core.ConnectionService
-import com.koso.core.Rx5Handler
-import com.koso.core.command.NaviInfoCommand
+import com.koso.rx5.core.BaseBluetoothDevice
+import com.koso.rx5.core.ConnectionService
+import com.koso.rx5.core.Rx5Handler
+import com.koso.rx5.core.command.NaviInfoCommand
 import com.koso.rx5sample.R
 import kotlinx.android.synthetic.main.fragment_navicommands.*
 

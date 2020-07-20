@@ -1,6 +1,5 @@
 package com.koso.rx5sample.utils
 
-import com.koso.core.util.Utility
 import java.math.BigInteger
 
 class StringUtils {

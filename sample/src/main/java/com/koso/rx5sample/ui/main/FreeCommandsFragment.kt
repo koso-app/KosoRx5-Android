@@ -8,8 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.koso.core.Rx5Handler
-import com.koso.core.util.Utility
+import com.koso.rx5.core.Rx5Handler
 import com.koso.rx5sample.R
 import com.koso.rx5sample.utils.StringUtils
 import kotlinx.android.synthetic.main.fragment_free.*

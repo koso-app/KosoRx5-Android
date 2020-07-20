@@ -1,2 +1,2 @@
-include ':sample', ':core'
+include ':sample', ':rx5'
 rootProject.name='Rx5Sample'
