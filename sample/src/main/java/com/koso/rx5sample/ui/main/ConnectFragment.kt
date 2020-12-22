@@ -83,7 +83,7 @@ class ConnectFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(TabbedViewModel::class.java)
+        viewModel = ViewModelProviders.of(requireActivity()).get(TabbedViewModel::class.java)
         subscribeStateEvent()
     }
 
@@ -118,10 +118,10 @@ class ConnectFragment : Fragment() {
 
                 when (Rx5Handler.stateLive.value) {
                     BaseBluetoothDevice.State.Connected -> {
-                        Rx5Handler.stopConnectService(activity!!)
+                        Rx5Handler.stopConnectService(requireActivity())
                     }
                     BaseBluetoothDevice.State.Connecting -> {
-                        Rx5Handler.stopConnectService(activity!!)
+                        Rx5Handler.stopConnectService(requireActivity())
                     }
                     else -> {
                         Rx5Handler.startConnectService(activity as Context)

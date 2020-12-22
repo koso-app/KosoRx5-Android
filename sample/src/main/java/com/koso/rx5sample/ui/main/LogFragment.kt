@@ -25,7 +25,7 @@ class LogFragment : Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewmodel = ViewModelProvider(activity!!).get(TabbedViewModel::class.java)
+        viewmodel = ViewModelProvider(requireActivity()).get(TabbedViewModel::class.java)
 
 
     }
