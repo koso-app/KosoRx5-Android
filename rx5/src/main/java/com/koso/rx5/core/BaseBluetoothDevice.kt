@@ -112,14 +112,7 @@ class BaseBluetoothDevice(
 
     }
 
-    /**
-     * Observes Bluetooth devices found while discovering.
-     *
-     * @return RxJava Observable with BluetoothDevice found
-     */
-    open fun observeDevices(): Observable<BluetoothDevice> {
-        return rxBluetooth.observeDevices()
-    }
+
 
     fun observeByteStream(): Flowable<Byte> {
         if (btConnection == null) throw NullPointerException("BluetoothConnection is not allowed to be null")

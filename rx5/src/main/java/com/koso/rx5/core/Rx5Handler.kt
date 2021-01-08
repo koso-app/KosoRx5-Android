@@ -1,8 +1,14 @@
 package com.koso.rx5.core
 
+import android.app.Application
+import android.bluetooth.BluetoothDevice
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.github.ivbaranov.rxbluetooth.RxBluetooth
+import com.koso.rx5.core.Rx5Handler.startDiscovery
+import io.reactivex.Flowable
+import io.reactivex.Observable
 
 object Rx5Handler{
 
@@ -23,6 +29,7 @@ object Rx5Handler{
 
     var rx5: BaseBluetoothDevice? = null
 
+
     /**
      * Start connection service
      */
@@ -36,6 +43,26 @@ object Rx5Handler{
     fun stopConnectService(context: Context){
         ConnectionService.stopService(context)
     }
+
+    /**
+     * Observes Bluetooth devices found while discovering.
+     *
+     * @return RxJava Observable with BluetoothDevice found
+     */
+    open fun observeDevices(rxBluetooth: RxBluetooth): Observable<BluetoothDevice> {
+        return rxBluetooth.observeDevices()
+    }
+
+
+    /**
+     * Start the remote device discovery process.
+     */
+    open fun startDiscovery(rxBluetooth: RxBluetooth) {
+
+        rxBluetooth.startDiscovery()
+    }
+
+
 
     fun destory() {
         rx5?.destory()

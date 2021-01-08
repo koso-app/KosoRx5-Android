@@ -79,7 +79,6 @@ class ConnectionService : LifecycleService() {
 
             if (Rx5Handler.rx5 == null) {
                 Rx5Handler.rx5 = BaseBluetoothDevice(this)
-
             }
 
             if (Rx5Handler.stateLive.value == BaseBluetoothDevice.State.Disconnected) {

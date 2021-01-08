@@ -2,6 +2,8 @@ package com.koso.rx5sample.ui.main
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -48,5 +50,20 @@ class TabbedActivity : AppCompatActivity() {
                 REQUEST_PERMISSION_COARSE_LOCATION
             )
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_tabbed_activity, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.search -> {
+                
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

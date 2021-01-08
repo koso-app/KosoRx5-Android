@@ -28,6 +28,7 @@
 
     <!-- Device Preferences -->
     <string name="target_mac_address">Target MAC address</string>
+    <string name="search">Search</string>
 
 
 </resources>
