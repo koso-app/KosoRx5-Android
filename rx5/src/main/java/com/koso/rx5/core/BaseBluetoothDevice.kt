@@ -155,8 +155,9 @@ class BaseBluetoothDevice(
                         it.printStackTrace()
                     })
                 Rx5Handler.setState(State.Connected)
-            }, {t ->
-
+            }, { t ->
+                Log.d("bt", "connectAsClient: ${t.localizedMessage}")
+                Rx5Handler.setState(State.Disconnected)
             })
         Rx5Handler.setState(State.Connecting)
         compositeDisposable.add(disposable)

@@ -31,6 +31,8 @@
     <string name="search">Search</string>
     <string name="scanning">Scanning</string>
     <string name="please_choose_a_bt">選擇一個藍芽裝置</string>
-
+    <string name="no_device">尚未選擇裝置</string>
+    <string name="connect_to">連線到%s</string>
+    <string name="choose_device">搜尋裝置</string>
 
 </resources>

@@ -106,10 +106,16 @@ class ConnectFragment : Fragment() {
         super.onResume()
 
         updateStateUi(Rx5Handler.stateLive.value)
+        val mac = SharedPreferenceHandler.targetMacAddress
+        device.text = if (mac.isEmpty()) getString(R.string.no_device) else String.format(
+            getString(R.string.connect_to),
+            mac
+        )
     }
 
     private fun initViews() {
-        vScan.setOnClickListener{
+
+        vScan.setOnClickListener {
             BlScanDialog().show(childFragmentManager, null)
         }
         vStart.setOnClickListener {
@@ -123,7 +129,7 @@ class ConnectFragment : Fragment() {
             } else if (mac.isEmpty()) {
                 BlScanDialog().show(childFragmentManager, null)
                 return@setOnClickListener
-            }else{
+            } else {
 
 
                 when (Rx5Handler.stateLive.value) {
@@ -134,7 +140,10 @@ class ConnectFragment : Fragment() {
                         Rx5Handler.stopConnectService(requireActivity())
                     }
                     else -> {
-                        Rx5Handler.startConnectService(activity as Context, SharedPreferenceHandler.targetMacAddress)
+                        Rx5Handler.startConnectService(
+                            activity as Context,
+                            SharedPreferenceHandler.targetMacAddress
+                        )
                     }
                 }
             }
