@@ -50,6 +50,17 @@ class TabbedActivity : AppCompatActivity() {
                 REQUEST_PERMISSION_COARSE_LOCATION
             )
         }
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.BLUETOOTH
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.BLUETOOTH),
+                REQUEST_PERMISSION_COARSE_LOCATION
+            )
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

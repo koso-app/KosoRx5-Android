@@ -2,24 +2,22 @@ package com.koso.rx5.core
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.util.Log
 import com.github.ivbaranov.rxbluetooth.BluetoothConnection
 import com.github.ivbaranov.rxbluetooth.RxBluetooth
 import com.koso.rx5.core.command.BaseCommand
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 
 class BaseBluetoothDevice(
     val context: Context,
+    val mac: String,
     val SERVICE_UUID: String = "00001101-0000-1000-8000-00805F9B34FB"
 ) {
 
@@ -139,6 +137,30 @@ class BaseBluetoothDevice(
         rxBluetooth.cancelDiscovery()
     }
 
+    open fun connectAsClient(){
+        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+        val uuid = UUID.fromString(SERVICE_UUID)
+        val device = bluetoothAdapter?.getRemoteDevice(mac)
+        val disposable = rxBluetooth.connectAsClient(device, uuid)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe({
+                btConnection = BluetoothConnection(it)
+                btConnection?.observeByteStream()!!
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        Log.d("rx5debug", it.toString())
+                    }, {
+                        it.printStackTrace()
+                    })
+                Rx5Handler.setState(State.Connected)
+            }, {t ->
+
+            })
+        Rx5Handler.setState(State.Connecting)
+        compositeDisposable.add(disposable)
+    }
 
     open fun connectAsServer(){
         val uuid = UUID.fromString(SERVICE_UUID)

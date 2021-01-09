@@ -29,6 +29,8 @@
     <!-- Device Preferences -->
     <string name="target_mac_address">Target MAC address</string>
     <string name="search">Search</string>
+    <string name="scanning">Scanning</string>
+    <string name="please_choose_a_bt">選擇一個藍芽裝置</string>
 
 
 </resources>

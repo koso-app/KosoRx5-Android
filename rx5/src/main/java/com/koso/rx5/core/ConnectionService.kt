@@ -17,14 +17,16 @@ import androidx.lifecycle.Observer
 class ConnectionService : LifecycleService() {
 
 
-    companion object{
+    companion object {
         private val EXTRA_STOP = "extra_stop"
 
-        fun startService(context: Context){
-            context.startService(Intent(context, ConnectionService::class.java))
+        fun startService(context: Context, macAddr: String) {
+            val intent = Intent(context, ConnectionService::class.java)
+            intent.putExtra("mac", macAddr)
+            context.startService(intent)
         }
 
-        fun stopService(context: Context){
+        fun stopService(context: Context) {
             val intent = Intent(context, ConnectionService::class.java)
             intent.putExtra(EXTRA_STOP, true)
             context.startService(intent)
@@ -36,12 +38,13 @@ class ConnectionService : LifecycleService() {
      * Channel id to build Notification
      */
     private val CHANNEL_ID = "RX5 Connection"
+
     /**
      * The id parameter for startForground()
      */
     private val ONGOING_NOTIFICATION_ID = 13
 
-
+    private var macAddress: String = ""
 
     private val connectionStateObserver = Observer<BaseBluetoothDevice.State> {
         when (it) {
@@ -61,6 +64,7 @@ class ConnectionService : LifecycleService() {
             }
         }
     }
+
     /**
      * Class used for the client Binder.  Because we know this service always
      * runs in the same process as its clients, we don't need to deal with IPC.
@@ -73,16 +77,16 @@ class ConnectionService : LifecycleService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        if(intent != null && intent.getBooleanExtra(EXTRA_STOP, false)){
+        if (intent != null && intent.getBooleanExtra(EXTRA_STOP, false)) {
             stopSelf()
-        }else {
-
+        } else {
+            macAddress = intent?.getStringExtra("mac") ?: ""
             if (Rx5Handler.rx5 == null) {
-                Rx5Handler.rx5 = BaseBluetoothDevice(this)
+                Rx5Handler.rx5 = BaseBluetoothDevice(this, macAddress)
             }
 
             if (Rx5Handler.stateLive.value == BaseBluetoothDevice.State.Disconnected) {
-                Rx5Handler.rx5!!.connectAsServer()
+                Rx5Handler.rx5!!.connectAsClient()
                 registerConnectionState()
             }
         }
@@ -133,9 +137,11 @@ class ConnectionService : LifecycleService() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel(channelId: String, channelName: String): String{
-        val chan = NotificationChannel(channelId,
-            channelName, NotificationManager.IMPORTANCE_NONE)
+    private fun createNotificationChannel(channelId: String, channelName: String): String {
+        val chan = NotificationChannel(
+            channelId,
+            channelName, NotificationManager.IMPORTANCE_NONE
+        )
         chan.lightColor = Color.WHITE
         chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
         val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

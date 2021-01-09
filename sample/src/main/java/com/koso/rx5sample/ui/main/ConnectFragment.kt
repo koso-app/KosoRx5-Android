@@ -1,5 +1,6 @@
 package com.koso.rx5sample.ui.main
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +15,8 @@ import com.koso.rx5.core.Rx5Handler
 import com.koso.rx5.core.util.Utility
 import com.koso.rx5sample.R
 import com.koso.rx5sample.utils.BluetoothUtil
+import com.koso.rx5sample.utils.SharedPreferenceHandler
+import com.koso.rx5sample.widgets.BlScanDialog
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -106,15 +109,22 @@ class ConnectFragment : Fragment() {
     }
 
     private fun initViews() {
+        vScan.setOnClickListener{
+            BlScanDialog().show(childFragmentManager, null)
+        }
         vStart.setOnClickListener {
-
+            val mac = SharedPreferenceHandler.targetMacAddress
             if (!BluetoothUtil.checkAndRequestBluetooth(
                     activity as AppCompatActivity,
                     REQUEST_ENABLE_BT
                 )
             ) {
                 // handle the lack of bluetooth support
-            } else {
+            } else if (mac.isEmpty()) {
+                BlScanDialog().show(childFragmentManager, null)
+                return@setOnClickListener
+            }else{
+
 
                 when (Rx5Handler.stateLive.value) {
                     BaseBluetoothDevice.State.Connected -> {
@@ -124,7 +134,7 @@ class ConnectFragment : Fragment() {
                         Rx5Handler.stopConnectService(requireActivity())
                     }
                     else -> {
-                        Rx5Handler.startConnectService(activity as Context)
+                        Rx5Handler.startConnectService(activity as Context, SharedPreferenceHandler.targetMacAddress)
                     }
                 }
             }

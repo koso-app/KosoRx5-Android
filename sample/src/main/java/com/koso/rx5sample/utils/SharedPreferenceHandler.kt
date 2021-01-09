@@ -10,7 +10,7 @@ class SharedPreferenceHandler {
         private const val PARAM_TARGET_MAC_ADDR = "target_mac_address"
 
         var targetMacAddress: String =
-            getSharedPrefences().getString(PARAM_TARGET_MAC_ADDR, App.instance.getString(R.string.default_target_mac_address))!!
+            getSharedPrefences().getString(PARAM_TARGET_MAC_ADDR, "")!!
             set(value) = getEditor().putString(PARAM_TARGET_MAC_ADDR, value).apply()
 
 
