@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 
-class BaseBluetoothDevice(
+class Rx5Device(
     val context: Context,
     val mac: String,
     val SERVICE_UUID: String = "00001101-0000-1000-8000-00805F9B34FB"

@@ -1,13 +1,10 @@
 package com.koso.rx5.core
 
-import android.app.Application
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.ivbaranov.rxbluetooth.RxBluetooth
-import com.koso.rx5.core.Rx5Handler.startDiscovery
-import io.reactivex.Flowable
 import io.reactivex.Observable
 
 object Rx5Handler{
@@ -16,18 +13,18 @@ object Rx5Handler{
     /**
      * Inner LiveData for updating the state observable value
      */
-    private val _stateLive: MutableLiveData<BaseBluetoothDevice.State> =
-        MutableLiveData<BaseBluetoothDevice.State>().apply {
-            this.value = BaseBluetoothDevice.State.Disconnected
+    private val __STATE_LIVE: MutableLiveData<Rx5Device.State> =
+        MutableLiveData<Rx5Device.State>().apply {
+            this.value = Rx5Device.State.Disconnected
         }
 
     /**
      * External LiveData for accessing the latest state
      */
-    val stateLive: LiveData<BaseBluetoothDevice.State> = _stateLive
+    val STATE_LIVE: LiveData<Rx5Device.State> = __STATE_LIVE
 
 
-    var rx5: BaseBluetoothDevice? = null
+    var rx5: Rx5Device? = null
 
 
     /**
@@ -67,11 +64,11 @@ object Rx5Handler{
     fun destory() {
         rx5?.destory()
         rx5 = null
-        setState(BaseBluetoothDevice.State.Disconnected)
+        setState(Rx5Device.State.Disconnected)
     }
 
-    fun setState(s: BaseBluetoothDevice.State) {
-        if (_stateLive.value != s) _stateLive.value = s
+    fun setState(s: Rx5Device.State) {
+        if (__STATE_LIVE.value != s) __STATE_LIVE.value = s
     }
 
 }

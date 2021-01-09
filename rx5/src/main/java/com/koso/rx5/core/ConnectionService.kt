@@ -46,17 +46,17 @@ class ConnectionService : LifecycleService() {
 
     private var macAddress: String = ""
 
-    private val connectionStateObserver = Observer<BaseBluetoothDevice.State> {
+    private val connectionStateObserver = Observer<Rx5Device.State> {
         when (it) {
-            BaseBluetoothDevice.State.Disconnected -> {
+            Rx5Device.State.Disconnected -> {
                 stopSelf()
             }
-            BaseBluetoothDevice.State.Connected -> {
+            Rx5Device.State.Connected -> {
                 postOngoingNotification()
             }
-            BaseBluetoothDevice.State.Connecting -> {
+            Rx5Device.State.Connecting -> {
             }
-            BaseBluetoothDevice.State.Discovering -> {
+            Rx5Device.State.Discovering -> {
 
             }
             else -> {
@@ -82,10 +82,10 @@ class ConnectionService : LifecycleService() {
         } else {
             macAddress = intent?.getStringExtra("mac") ?: ""
             if (Rx5Handler.rx5 == null) {
-                Rx5Handler.rx5 = BaseBluetoothDevice(this, macAddress)
+                Rx5Handler.rx5 = Rx5Device(this, macAddress)
             }
 
-            if (Rx5Handler.stateLive.value == BaseBluetoothDevice.State.Disconnected) {
+            if (Rx5Handler.STATE_LIVE.value == Rx5Device.State.Disconnected) {
                 Rx5Handler.rx5!!.connectAsClient()
                 registerConnectionState()
             }
@@ -95,7 +95,7 @@ class ConnectionService : LifecycleService() {
     }
 
     private fun registerConnectionState() {
-        Rx5Handler.stateLive.observe(this, connectionStateObserver)
+        Rx5Handler.STATE_LIVE.observe(this, connectionStateObserver)
     }
 
     override fun onDestroy() {

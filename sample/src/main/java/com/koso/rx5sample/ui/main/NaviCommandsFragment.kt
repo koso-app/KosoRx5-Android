@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.koso.rx5.core.BaseBluetoothDevice
+import com.koso.rx5.core.Rx5Device
 import com.koso.rx5.core.ConnectionService
 import com.koso.rx5.core.Rx5Handler
 import com.koso.rx5.core.command.NaviInfoCommand
@@ -45,18 +45,18 @@ class NaviCommandsFragment : Fragment() {
     }
 
     private fun subscribeStateEvent() {
-        Rx5Handler.stateLive.observe(this, Observer {
+        Rx5Handler.STATE_LIVE.observe(this, Observer {
             when (it) {
-                BaseBluetoothDevice.State.Disconnected -> {
+                Rx5Device.State.Disconnected -> {
 
                 }
-                BaseBluetoothDevice.State.Connected -> {
+                Rx5Device.State.Connected -> {
 
                 }
-                BaseBluetoothDevice.State.Discovering -> {
+                Rx5Device.State.Discovering -> {
 
                 }
-                BaseBluetoothDevice.State.Connecting -> {
+                Rx5Device.State.Connecting -> {
 
                 }
                 else -> {

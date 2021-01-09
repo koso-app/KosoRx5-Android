@@ -1,6 +1,5 @@
 package com.koso.rx5sample.ui.main
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.koso.rx5.core.BaseBluetoothDevice
+import com.koso.rx5.core.Rx5Device
 import com.koso.rx5.core.Rx5Handler
 import com.koso.rx5.core.util.Utility
 import com.koso.rx5sample.R
@@ -105,7 +104,7 @@ class ConnectFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        updateStateUi(Rx5Handler.stateLive.value)
+        updateStateUi(Rx5Handler.STATE_LIVE.value)
         val mac = SharedPreferenceHandler.targetMacAddress
         device.text = if (mac.isEmpty()) getString(R.string.no_device) else String.format(
             getString(R.string.connect_to),
@@ -132,11 +131,11 @@ class ConnectFragment : Fragment() {
             } else {
 
 
-                when (Rx5Handler.stateLive.value) {
-                    BaseBluetoothDevice.State.Connected -> {
+                when (Rx5Handler.STATE_LIVE.value) {
+                    Rx5Device.State.Connected -> {
                         Rx5Handler.stopConnectService(requireActivity())
                     }
-                    BaseBluetoothDevice.State.Connecting -> {
+                    Rx5Device.State.Connecting -> {
                         Rx5Handler.stopConnectService(requireActivity())
                     }
                     else -> {
@@ -151,32 +150,32 @@ class ConnectFragment : Fragment() {
     }
 
     private fun subscribeStateEvent() {
-        Rx5Handler.stateLive.observe(this, Observer {
+        Rx5Handler.STATE_LIVE.observe(this, Observer {
 //            viewModel.log(it.name)
             updateStateUi(it)
-            if (it == BaseBluetoothDevice.State.Connected) {
+            if (it == Rx5Device.State.Connected) {
                 subscribeByteStream()
             }
         })
     }
 
-    private fun updateStateUi(it: BaseBluetoothDevice.State?) {
+    private fun updateStateUi(it: Rx5Device.State?) {
 
         when (it) {
-            BaseBluetoothDevice.State.Disconnected -> {
+            Rx5Device.State.Disconnected -> {
                 vStart.setText(R.string.disconnected)
                 vStart.setBackgroundResource(R.drawable.ripple_oval_btn_disconnect)
             }
-            BaseBluetoothDevice.State.Connected -> {
+            Rx5Device.State.Connected -> {
                 vStart.setText(R.string.connected)
                 vStart.setBackgroundResource(R.drawable.ripple_oval_btn_connect)
 
             }
-            BaseBluetoothDevice.State.Discovering -> {
+            Rx5Device.State.Discovering -> {
                 vStart.setText(R.string.discovering)
                 vStart.setBackgroundResource(R.drawable.ripple_oval_btn_progress)
             }
-            BaseBluetoothDevice.State.Connecting -> {
+            Rx5Device.State.Connecting -> {
                 vStart.setText(R.string.connecting)
                 vStart.setBackgroundResource(R.drawable.ripple_oval_btn_progress)
             }
