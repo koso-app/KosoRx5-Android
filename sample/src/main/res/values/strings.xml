@@ -3,7 +3,7 @@
     <string name="disconnected">Disconnected</string>
     <string name="connected">Connected</string>
     <string name="discovering">Searching...</string>
-    <string name="connecting">Server waiting...</string>
+    <string name="connecting">Connecting...</string>
     <string name="title_activity_tabbed">TabbedActivity</string>
     <string name="tab_text_1">Connection</string>
     <string name="tab_text_2">Navigation Command</string>
@@ -29,7 +29,7 @@
     <!-- Device Preferences -->
     <string name="target_mac_address">Target MAC address</string>
     <string name="search">Search</string>
-    <string name="scanning">Scanning</string>
+    <string name="scanning">搜尋中</string>
     <string name="please_choose_a_bt">選擇一個藍芽裝置</string>
     <string name="no_device">尚未選擇裝置</string>
     <string name="connect_to">連線到%s</string>

@@ -5,11 +5,12 @@ import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.*
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,15 +37,21 @@ class BlScanDialog : DialogFragment() {
                     // object and its info from the Intent.
                     val device: BluetoothDevice =
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    val deviceName = device.name
-                    if (deviceName == null || deviceName.isEmpty()) return
-                    adapter.add(device)
+                    if (possibleDevice(device)) {
+                        val deviceName = device.name
+                        if (deviceName == null || deviceName.isEmpty()) return
+                        adapter.addFound(device)
+                    }
                 }
             }
         }
     }
 
+    private fun possibleDevice(device: BluetoothDevice): Boolean {
 
+//        return device.type == BluetoothDevice.DEVICE_TYPE_CLASSIC
+        return true
+    }
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -62,11 +69,20 @@ class BlScanDialog : DialogFragment() {
 
 
         scan()
+        bound()
+
 
         return builder.create()
     }
 
 
+    private fun bound() {
+        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
+        pairedDevices?.filter { d -> possibleDevice(d) }
+            ?.forEach { device ->
+                adapter.addBond(device)
+            }
+    }
 
     private fun scan() {
         // Register for broadcasts when a device is discovered.
@@ -74,7 +90,6 @@ class BlScanDialog : DialogFragment() {
         activity?.registerReceiver(receiver, filter)
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         val success = bluetoothAdapter?.startDiscovery()
-        Log.d("BlScanDialog", "scan: ${success}")
     }
 
     override fun onDetach() {
@@ -89,19 +104,37 @@ class BlScanDialog : DialogFragment() {
 
     inner class BlDeviceListAdapter :
         RecyclerView.Adapter<DeviceViewHolder>() {
-        val list = mutableListOf<BluetoothDevice>()
+        val foundList = mutableListOf<BluetoothDevice>()
+        val bondList = mutableListOf<BluetoothDevice>()
 
-        fun add(d: BluetoothDevice) {
+        fun addBond(d: BluetoothDevice) {
             var found = false
-            for (device in list) {
+            for (device in bondList) {
                 if (device.address == d.address) {
                     found = true
                     break
                 }
             }
 
+
             if (!found) {
-                list.add(d)
+                bondList.add(d)
+                notifyDataSetChanged()
+            }
+        }
+
+        fun addFound(d: BluetoothDevice) {
+            var found = false
+            for (device in foundList) {
+                if (device.address == d.address) {
+                    found = true
+                    break
+                }
+            }
+
+
+            if (!found) {
+                foundList.add(d)
                 notifyDataSetChanged()
             }
 
@@ -114,11 +147,15 @@ class BlScanDialog : DialogFragment() {
         }
 
         override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
-            holder.bind(list[position])
+            if (position < foundList.size) {
+                holder.bind(foundList[position], true)
+            } else {
+                holder.bind(bondList[position - foundList.size], false)
+            }
         }
 
         override fun getItemCount(): Int {
-            return list.size
+            return foundList.size + bondList.size
         }
 
     }
@@ -133,10 +170,31 @@ class BlScanDialog : DialogFragment() {
             }
         }
 
-        fun bind(d: BluetoothDevice) {
+        fun bind(d: BluetoothDevice, found: Boolean) {
             device = d
             itemView.findViewById<TextView>(R.id.vName).text = d.name
             itemView.findViewById<TextView>(R.id.vAddress).text = d.address
+            itemView.findViewById<TextView>(R.id.vName)
+                .setTextColor(if (found) Color.BLACK else Color.LTGRAY)
+            itemView.findViewById<TextView>(R.id.vAddress)
+                .setTextColor(if (found) Color.DKGRAY else Color.LTGRAY)
+            itemView.findViewById<TextView>(R.id.vAddress).textSize = 10f
+            itemView.findViewById<TextView>(R.id.vType).text = "分類:${d.bluetoothClass.majorDeviceClass}-${d.bluetoothClass.deviceClass}"
+            itemView.findViewById<TextView>(R.id.vType).textSize = 10f
+            itemView.findViewById<ImageView>(R.id.vIcon).setImageResource(getIcon(d.bluetoothClass.majorDeviceClass))
+        }
+
+        fun getIcon(type: Int): Int{
+            when(type){
+                2304 -> return R.drawable.ic_baseline_health_and_safety_24
+                2048 -> return R.drawable.ic_baseline_toys_24
+                1792 -> return R.drawable.ic_speed_meter
+                1280 -> return R.drawable.ic_baseline_adjust_24
+                1024 -> return R.drawable.ic_baseline_slow_motion_video_24
+                512 -> return R.drawable.ic_baseline_smartphone_24
+                256 -> return R.drawable.ic_baseline_computer_24
+                else -> return R.drawable.ic_baseline_bluetooth_24
+            }
         }
     }
 

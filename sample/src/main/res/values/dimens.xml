@@ -7,6 +7,6 @@
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="edittext_width">160dp</dimen>
     <dimen name="l_space">16dp</dimen>
-    <dimen name="font_list_item">14sp</dimen>
+    <dimen name="font_list_item">16sp</dimen>
     <dimen name="s_space">4dp</dimen>
 </resources>
