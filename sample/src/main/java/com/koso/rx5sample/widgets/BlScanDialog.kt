@@ -24,6 +24,7 @@ class BlScanDialog : DialogFragment() {
     var vRecycler: RecyclerView? = null
     val adapter = BlDeviceListAdapter()
     var bluetoothAdapter: BluetoothAdapter? = null
+    var listener: BlSelectListener? = null
 
 
     // Create a BroadcastReceiver for ACTION_FOUND.
@@ -45,6 +46,15 @@ class BlScanDialog : DialogFragment() {
                 }
             }
         }
+    }
+
+    interface BlSelectListener{
+        fun  onSelect()
+    }
+
+    fun setBlSelectListener(l: BlSelectListener): BlScanDialog{
+        listener = l
+        return this
     }
 
     private fun possibleDevice(device: BluetoothDevice): Boolean {
@@ -166,6 +176,7 @@ class BlScanDialog : DialogFragment() {
         init {
             itemView.findViewById<ViewGroup>(R.id.vRoot).setOnClickListener {
                 SharedPreferenceHandler.targetMacAddress = device!!.address
+                listener?.onSelect()
                 dialog?.dismiss()
             }
         }
@@ -179,7 +190,12 @@ class BlScanDialog : DialogFragment() {
             itemView.findViewById<TextView>(R.id.vAddress)
                 .setTextColor(if (found) Color.DKGRAY else Color.LTGRAY)
             itemView.findViewById<TextView>(R.id.vAddress).textSize = 10f
-            itemView.findViewById<TextView>(R.id.vType).text = "分類:${d.bluetoothClass.majorDeviceClass}-${d.bluetoothClass.deviceClass}"
+            itemView.findViewById<TextView>(R.id.vType).text = when(d.type) {
+                BluetoothDevice.DEVICE_TYPE_CLASSIC -> "CLASSIC"
+                BluetoothDevice.DEVICE_TYPE_LE -> "BLE"
+                BluetoothDevice.DEVICE_TYPE_DUAL -> "DUAL"
+                else -> "UNKNOW"
+            }
             itemView.findViewById<TextView>(R.id.vType).textSize = 10f
             itemView.findViewById<ImageView>(R.id.vIcon).setImageResource(getIcon(d.bluetoothClass.majorDeviceClass))
         }

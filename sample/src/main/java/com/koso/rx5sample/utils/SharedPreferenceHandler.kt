@@ -7,7 +7,7 @@ import com.koso.rx5sample.R
 
 class SharedPreferenceHandler {
     companion object {
-        private const val PARAM_TARGET_MAC_ADDR = "target_mac_address"
+        const val PARAM_TARGET_MAC_ADDR = "target_mac_address"
 
         var targetMacAddress: String
         get() = getSharedPrefences().getString(PARAM_TARGET_MAC_ADDR, "")!!

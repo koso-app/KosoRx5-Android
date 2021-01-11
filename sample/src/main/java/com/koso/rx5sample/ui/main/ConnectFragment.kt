@@ -1,10 +1,9 @@
 package com.koso.rx5sample.ui.main
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -50,22 +49,19 @@ class ConnectFragment : Fragment() {
      */
     private val compositeDisposable = CompositeDisposable()
 
-    /**
-     * The buffer of the incoming byte from Bluetooth
-     */
-    private var incomingByte = byteArrayOf()
 
-    private var byteBuffer = arrayListOf<Byte>()
-
+    private val blSelectListener = object: BlScanDialog.BlSelectListener{
+        override fun onSelect() {
+            vStart.performClick()
+        }
+    }
+    private val sharedPrefListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == SharedPreferenceHandler.PARAM_TARGET_MAC_ADDR) {
+            showDeviceAddress(SharedPreferenceHandler.targetMacAddress)
+        }
+    }
 
     private fun subscribeByteStream() {
-
-//        val dispo = Rx5Handler.rx5?.observeStringStream()
-//            ?.observeOn(AndroidSchedulers.mainThread())
-//            ?.subscribeOn(Schedulers.io())
-//            ?.subscribe({
-//                viewModel.log("received string: ${Utility.bytesToHex(it.toByteArray())}")
-//            }, {})
 
         val dispo1 = Rx5Handler.rx5?.observeByteStream()
             ?.observeOn(AndroidSchedulers.mainThread())
@@ -74,9 +70,7 @@ class ConnectFragment : Fragment() {
                 viewModel.log("received byte: ${Utility.bytesToHex(byteArrayOf(it))}")
             }, {})
 
-//        dispo?.let{
-//            compositeDisposable.add(it)
-//        }
+
 
         dispo1?.let {
             compositeDisposable.add(it)
@@ -87,6 +81,8 @@ class ConnectFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(requireActivity()).get(TabbedViewModel::class.java)
         subscribeStateEvent()
+        setHasOptionsMenu(true)
+        SharedPreferenceHandler.getSharedPrefences().registerOnSharedPreferenceChangeListener(sharedPrefListener)
     }
 
     override fun onCreateView(
@@ -106,11 +102,25 @@ class ConnectFragment : Fragment() {
 
         updateStateUi(Rx5Handler.STATE_LIVE.value)
         val mac = SharedPreferenceHandler.targetMacAddress
-        device.text = if (mac.isEmpty()) getString(R.string.no_device) else String.format(
-            getString(R.string.connect_to),
-            mac
-        )
+        showDeviceAddress(mac)
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        SharedPreferenceHandler.getSharedPrefences().unregisterOnSharedPreferenceChangeListener(sharedPrefListener)
+    }
+    private fun showDeviceAddress(mac: String?) {
+        if (mac != null) {
+            device.text = if (mac.isEmpty()) getString(R.string.no_device) else String.format(
+                getString(R.string.connect_to),
+                mac
+            )
+        }else{
+            device.text = getString(R.string.no_device)
+        }
+
+    }
+
 
     private fun initViews() {
 
@@ -118,14 +128,14 @@ class ConnectFragment : Fragment() {
             when (Rx5Handler.STATE_LIVE.value) {
                 Rx5Device.State.Connected -> {
                     Rx5Handler.stopConnectService(requireActivity())
-                    BlScanDialog().show(childFragmentManager, null)
+                    BlScanDialog().setBlSelectListener(blSelectListener).show(childFragmentManager, null)
                 }
                 Rx5Device.State.Connecting -> {
                     Rx5Handler.stopConnectService(requireActivity())
-                    BlScanDialog().show(childFragmentManager, null)
+                    BlScanDialog().setBlSelectListener(blSelectListener).show(childFragmentManager, null)
                 }
                 else -> {
-                    BlScanDialog().show(childFragmentManager, null)
+                    BlScanDialog().setBlSelectListener(blSelectListener).show(childFragmentManager, null)
                 }
             }
 
@@ -139,10 +149,9 @@ class ConnectFragment : Fragment() {
             ) {
                 // handle the lack of bluetooth support
             } else if (mac.isEmpty()) {
-                BlScanDialog().show(childFragmentManager, null)
+                BlScanDialog().setBlSelectListener(blSelectListener).show(childFragmentManager, null)
                 return@setOnClickListener
             } else {
-
 
                 when (Rx5Handler.STATE_LIVE.value) {
                     Rx5Device.State.Connected -> {
@@ -161,7 +170,7 @@ class ConnectFragment : Fragment() {
             }
         }
 
-        if(SharedPreferenceHandler.targetMacAddress.isNotEmpty()){
+        if (SharedPreferenceHandler.targetMacAddress.isNotEmpty()) {
             vStart.performClick()
         }
     }
@@ -199,6 +208,19 @@ class ConnectFragment : Fragment() {
             else -> {
 
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_tabbed_activity, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.search) {
+            vScan.performClick()
+            return true
+        } else {
+            return false
         }
     }
 

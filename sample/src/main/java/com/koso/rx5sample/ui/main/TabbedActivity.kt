@@ -63,18 +63,4 @@ class TabbedActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_tabbed_activity, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.search -> {
-                
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
 }

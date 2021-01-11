@@ -111,7 +111,7 @@ class ConnectionService : LifecycleService() {
 
 
         val notification: Notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val cId = createNotificationChannel("msda", CHANNEL_ID)
+            val cId = createNotificationChannel("rx5", CHANNEL_ID)
             NotificationCompat.Builder(this, cId)
                 .setContentTitle("RX5")
                 .setContentText("Connection service started")
@@ -161,7 +161,7 @@ class ConnectionService : LifecycleService() {
                 channelId,
                 importance
             )
-            NotificationCompat.Builder(context!!, channelId!!)
+            NotificationCompat.Builder(context, channelId)
         } else {
             NotificationCompat.Builder(context)
         }
