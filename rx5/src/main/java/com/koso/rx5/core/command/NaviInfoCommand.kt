@@ -40,67 +40,55 @@ class NaviInfoCommand(
     }
 
     fun getNaviMode(): ByteArray {
-        return navimode.toByteArray(4)
+        return navimode.toByteArray(4).reversedArray()
     }
 
     fun getCtName(): ByteArray {
-        return String(
-            ctname.toByteArray(Charset.forName("UTF-8")),
-            Charset.forName("BIG5")
-        ).toByteArray(24)
+        return Utility.createLittleEndianStringToByteArray(ctname.toByteArray(), 24)
     }
 
     fun getRoadName(): ByteArray {
-        return String(
-            roadname.toByteArray(Charset.forName("UTF-8")),
-            Charset.forName("BIG5")
-        ).toByteArray(64)
+        return Utility.createLittleEndianStringToByteArray(roadname.toByteArray(), 64)
     }
 
     fun getDoorNum(): ByteArray {
-        return String(
-            doornum.toByteArray(Charset.forName("UTF-8")),
-            Charset.forName("BIG5")
-        ).toByteArray(24)
+        return Utility.createLittleEndianStringToByteArray(doornum.toByteArray(), 24)
     }
 
     fun getLimitSpeed(): ByteArray {
-        return limitsp.toByteArray(4)
+        return limitsp.toByteArray(4).reversedArray()
     }
 
     fun getNextRoadName(): ByteArray {
-        return String(
-            nextroadname.toByteArray(Charset.forName("UTF-8")),
-            Charset.forName("BIG5")
-        ).toByteArray(64)
+        return Utility.createLittleEndianStringToByteArray(nextroadname.toByteArray(), 64)
     }
 
     fun getNextDist(): ByteArray {
-        return nextdist.toByteArray(4)
+        return nextdist.toByteArray(4).reversedArray()
     }
 
     fun getNextTurn(): ByteArray {
-        return nextturn.toByteArray(4)
+        return nextturn.toByteArray(4).reversedArray()
     }
 
     fun getCamera(): ByteArray {
-        return camera.toByteArray(4)
+        return camera.toByteArray(4).reversedArray()
     }
 
     fun getNaviDist(): ByteArray {
-        return navidist.toByteArray(4)
+        return navidist.toByteArray(4).reversedArray()
     }
 
     fun getNaviTime(): ByteArray {
-        return navitime.toByteArray(4)
+        return navitime.toByteArray(4).reversedArray()
     }
 
     fun getGpsNum(): ByteArray {
-        return gpsnum.toByteArray(4)
+        return gpsnum.toByteArray(4).reversedArray()
     }
 
     fun getGpsDir(): ByteArray {
-        return gpsdir.toByteArray(4)
+        return gpsdir.toByteArray(4).reversedArray()
     }
 
     override fun valueToString(): String {

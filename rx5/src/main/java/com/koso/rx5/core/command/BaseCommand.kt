@@ -4,6 +4,7 @@ import com.koso.rx5.core.util.Utility
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.lang.StringBuilder
+import java.nio.ByteBuffer
 import java.util.*
 import kotlin.experimental.xor
 
@@ -54,7 +55,6 @@ abstract class BaseCommand {
     }
 
     fun encode(): ByteArray {
-
         var result = concatenateByteArrays(
             byteArrayOf(HEADER1),
             byteArrayOf(HEADER2),

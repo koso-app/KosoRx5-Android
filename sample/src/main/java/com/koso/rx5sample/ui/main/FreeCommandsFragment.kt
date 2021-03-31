@@ -6,12 +6,14 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.koso.rx5.core.Rx5Handler
 import com.koso.rx5sample.R
 import com.koso.rx5sample.utils.StringUtils
 import kotlinx.android.synthetic.main.fragment_free.*
+import java.lang.Exception
 
 class FreeCommandsFragment : Fragment() {
 
@@ -28,7 +30,7 @@ class FreeCommandsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewmodel = ViewModelProvider(activity!!).get(TabbedViewModel::class.java)
+        viewmodel = ViewModelProvider(requireActivity()).get(TabbedViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -47,17 +49,26 @@ class FreeCommandsFragment : Fragment() {
     private fun initViews() {
         vSend.setOnClickListener {
             val content = vEditText.text.toString()
-            val bytes = StringUtils.hexStringToByteArray(content)
+            if(content.isEmpty()){
+                Toast.makeText(context, "請輸入內容", Toast.LENGTH_SHORT).show()
+            }else {
+                try {
+                    val bytes = StringUtils.hexStringToByteArray(content)
 
-            if(Rx5Handler.rx5 != null) {
-                val ok = Rx5Handler.rx5!!.write(bytes)
-                if (ok) {
-                    viewmodel.log("$content")
-                }else{
-                    viewmodel.log("Failed, connection is not available")
+                    if (Rx5Handler.rx5 != null) {
+                        val ok = Rx5Handler.rx5!!.write(bytes)
+                        if (ok) {
+                            viewmodel.log("$content")
+                        } else {
+                            viewmodel.log("Failed, connection is not available")
+                        }
+                    } else {
+                        viewmodel.log("Failed, connection is not available")
+                    }
+                }catch (e: Exception){
+                    Toast.makeText(context, "請輸入16進位內容", Toast.LENGTH_SHORT).show()
+                    e.printStackTrace()
                 }
-            }else{
-                viewmodel.log("Failed, connection is not available")
             }
         }
 
