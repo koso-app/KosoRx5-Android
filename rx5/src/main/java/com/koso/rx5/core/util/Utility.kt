@@ -16,9 +16,16 @@ object Utility {
     }
 
     fun createLittleEndianStringToByteArray(bytes: ByteArray, size: Int): ByteArray{
-        if(bytes.size > size) throw IllegalStateException()
-        val buffer = ByteBuffer.allocate(size)
-        buffer.put(bytes)
-        return buffer.array().reversedArray()
+//        if(bytes.size > size) throw IllegalStateException()
+//        val buffer = ByteBuffer.allocate(size)
+//        buffer.put(bytes, size - bytes.size - 1, bytes.size)
+//        return buffer.array().reversedArray()
+
+        val result = ByteArray(size)
+
+        for (i in bytes.indices){
+            result[i] = bytes[i]
+        }
+        return result
     }
 }

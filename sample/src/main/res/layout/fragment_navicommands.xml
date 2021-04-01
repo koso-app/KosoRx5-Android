@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:inputType="text"
-                android:text="台南市東區"
+                android:text="台南市"
                 app:layout_constraintStart_toStartOf="@id/navimode"
                 app:layout_constraintTop_toBottomOf="@id/navimode" />
 
