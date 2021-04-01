@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.koso.rx5.core.Rx5Device
-import com.koso.rx5.core.ConnectionService
+import com.koso.rx5.core.Rx5ConnectionService
 import com.koso.rx5.core.Rx5Handler
 import com.koso.rx5.core.command.NaviInfoCommand
 import com.koso.rx5sample.R
@@ -26,19 +26,19 @@ class NaviCommandsFragment : Fragment() {
     private lateinit var viewmodel: TabbedViewModel
 
 
-    private var service: ConnectionService? = null
+    private var serviceRx5: Rx5ConnectionService? = null
 
     /**
      * The connection state call back for ConnectionService
      */
     private val connection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
-            service = null
+            serviceRx5 = null
         }
 
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-            service = (binder as ConnectionService.ConnectServiceBinder).service
-            service?.let {
+            serviceRx5 = (binder as Rx5ConnectionService.ConnectServiceBinder).serviceRx5
+            serviceRx5?.let {
                 subscribeStateEvent()
             }
         }

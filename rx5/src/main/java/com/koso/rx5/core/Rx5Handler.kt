@@ -31,14 +31,14 @@ object Rx5Handler{
      * Start connection service
      */
     fun startConnectService(context: Context, address: String){
-        ConnectionService.startService(context, address)
+        Rx5ConnectionService.startService(context, address)
     }
 
     /**
      * Stop connection service
      */
     fun stopConnectService(context: Context){
-        ConnectionService.stopService(context)
+        Rx5ConnectionService.stopService(context)
     }
 
     /**

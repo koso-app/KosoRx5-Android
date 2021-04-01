@@ -14,20 +14,20 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.Observer
 
 
-class ConnectionService : LifecycleService() {
+class Rx5ConnectionService : LifecycleService() {
 
 
     companion object {
         private val EXTRA_STOP = "extra_stop"
 
         fun startService(context: Context, macAddr: String) {
-            val intent = Intent(context, ConnectionService::class.java)
+            val intent = Intent(context, Rx5ConnectionService::class.java)
             intent.putExtra("mac", macAddr)
             context.startService(intent)
         }
 
         fun stopService(context: Context) {
-            val intent = Intent(context, ConnectionService::class.java)
+            val intent = Intent(context, Rx5ConnectionService::class.java)
             intent.putExtra(EXTRA_STOP, true)
             context.startService(intent)
         }
@@ -71,7 +71,7 @@ class ConnectionService : LifecycleService() {
      */
     inner class ConnectServiceBinder : Binder() {
         // Return this instance of LocalService so clients can call public methods
-        val service: ConnectionService = this@ConnectionService
+        val serviceRx5: Rx5ConnectionService = this@Rx5ConnectionService
     }
 
 
