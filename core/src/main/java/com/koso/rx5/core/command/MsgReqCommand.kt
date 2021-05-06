@@ -1,12 +1,13 @@
 package com.koso.rx5.core.command
 
+import com.koso.rx5.core.util.Utility
 import java.io.ByteArrayOutputStream
 import java.lang.IllegalStateException
 
 class MsgReqCommand(val cmd: Int, val pollingList: List<PollingItem>): BaseCommand() {
     class ClearCommandBuilder {
         fun build(): MsgReqCommand{
-            return MsgReqCommand(0x00, listOf())
+            return MsgReqCommand(0, listOf())
         }
     }
 
@@ -19,7 +20,7 @@ class MsgReqCommand(val cmd: Int, val pollingList: List<PollingItem>): BaseComma
 
         fun build(): MsgReqCommand{
             if(list.size > 0) {
-                return MsgReqCommand(0x80, list)
+                return MsgReqCommand(128, list)
             }else{
                 throw IllegalStateException("No any polling item added in the request list")
             }
@@ -52,7 +53,16 @@ class MsgReqCommand(val cmd: Int, val pollingList: List<PollingItem>): BaseComma
     }
 
     override fun valueToString(): String {
-        return ""
+        var items = ""
+        for(i in pollingList.indices){
+            items += Utility.bytesToHex(pollingList[i].msgId.toByteArray(4).reversedArray()) + ","
+            items += Utility.bytesToHex(pollingList[i].hz.toByteArray(4).reversedArray()) + ","
+
+        }
+        return "{" +
+                "id: ${Utility.bytesToHex(getCmdId())}," +
+                "$items" +
+                "}"
     }
 
     override fun header1(): Byte {

@@ -8,10 +8,8 @@ class BaseCommandKtTest{
     @ExperimentalStdlibApi
     @Test
     fun testToByteArray(){
-        println(Utility.bytesToHex(1800.toByteArray(4)))
-        assert(Utility.bytesToHex(1800.toByteArray(4)) == "00000708")
+        println(Utility.bytesToHex(128.toByteArray(4).reversedArray()))
 
-        println(Utility.bytesToHex("中華路".encodeToByteArray()))
     }
 
 

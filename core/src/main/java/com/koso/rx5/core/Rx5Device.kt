@@ -152,7 +152,6 @@ class Rx5Device(
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        Log.d("rx5debug", it.toString())
                     }, {
                         it.printStackTrace()
                     })
@@ -176,7 +175,6 @@ class Rx5Device(
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({
-                        Log.d("rx5debug", it.toString())
                     }, {
                         it.printStackTrace()
                     })
