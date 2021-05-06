@@ -32,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="0x80"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Switch"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

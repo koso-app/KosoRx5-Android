@@ -113,7 +113,6 @@ class NaviInfoCommand(
         builder.appendln("GpsDir = ${Utility.bytesToHex(getGpsDir())}")
         builder.appendln("}")
 
-
         return builder.toString()
     }
 

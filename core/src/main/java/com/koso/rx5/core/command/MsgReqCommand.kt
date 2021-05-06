@@ -1,15 +1,16 @@
 package com.koso.rx5.core.command
 
+import java.io.ByteArrayOutputStream
 import java.lang.IllegalStateException
 
 class MsgReqCommand(val cmd: Int, val pollingList: List<PollingItem>): BaseCommand() {
-    inner class ClearCommandBuilder {
+    class ClearCommandBuilder {
         fun build(): MsgReqCommand{
             return MsgReqCommand(0x00, listOf())
         }
     }
 
-    inner class ReqCommandBuilder{
+    class ReqCommandBuilder{
         private val list = ArrayList<PollingItem>()
         fun addItem(item: PollingItem): ReqCommandBuilder{
             list.add(item)
@@ -25,10 +26,29 @@ class MsgReqCommand(val cmd: Int, val pollingList: List<PollingItem>): BaseComma
         }
     }
 
-    class PollingItem(msgId: Int, hz: Int)
+    class PollingItem(val msgId: Int, val hz: Int)
 
     override fun value(): ByteArray {
-        return byteArrayOf()
+        val output = ByteArrayOutputStream()
+        output.write(getCmdId())
+        for (item in getItems()){
+            output.write(item)
+        }
+        return output.toByteArray()
+    }
+
+    fun getCmdId(): ByteArray{
+        return cmd.toByteArray(4).reversedArray()
+    }
+
+    fun getItems(): List<ByteArray>{
+        val result = arrayListOf<ByteArray>()
+        for (i in pollingList.indices){
+            val index = i * 2
+            result.add(pollingList[i].msgId.toByteArray(4).reversedArray())
+            result.add(pollingList[i].hz.toByteArray(4).reversedArray())
+        }
+        return result
     }
 
     override fun valueToString(): String {

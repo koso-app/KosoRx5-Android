@@ -80,6 +80,16 @@ abstract class BaseCommand {
         return output.toByteArray()
     }
 
+    fun concatenateByteArrays(bytes: List<ByteArray>): ByteArray{
+        val output = ByteArrayOutputStream()
+        println("-------------")
+        for (ba in bytes) {
+            output.write(ba)
+            println(Utility.bytesToHex(ba))
+        }
+        return output.toByteArray()
+    }
+
     override fun toString(): String {
         val builder = StringBuilder()
         builder.appendln("--------")
