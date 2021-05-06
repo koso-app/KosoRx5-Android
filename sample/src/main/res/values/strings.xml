@@ -5,10 +5,10 @@
     <string name="discovering">Searching...</string>
     <string name="connecting">Connecting...</string>
     <string name="title_activity_tabbed">TabbedActivity</string>
-    <string name="tab_text_1">Connection</string>
-    <string name="tab_text_2">Navigation Command</string>
-    <string name="tab_text_3">Free Command</string>
-    <string name="tab_text_4">Log</string>
+    <string name="tab_text_conn">Connection</string>
+    <string name="tab_text_msgreq">Message Req</string>
+    <string name="tab_text_navi">Navigation Command</string>
+    <string name="tab_text_free">Free Command</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
     <string name="send">Send</string>
@@ -34,5 +34,8 @@
     <string name="no_device">尚未選擇裝置</string>
     <string name="connect_to">連線到%s</string>
     <string name="choose_device">搜尋裝置</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tab_text_log">Log</string>
 
 </resources>

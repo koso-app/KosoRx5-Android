@@ -7,10 +7,11 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.koso.rx5sample.R
 
 private val TAB_TITLES = arrayOf(
-    R.string.tab_text_1,
-    R.string.tab_text_2,
-    R.string.tab_text_3,
-    R.string.tab_text_4
+    R.string.tab_text_conn,
+    R.string.tab_text_msgreq,
+    R.string.tab_text_navi,
+    R.string.tab_text_free,
+    R.string.tab_text_log
 )
 
 /**
@@ -28,9 +29,12 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
                 ConnectFragment.newInstance()
             }
             1 -> {
-                NaviCommandsFragment.newInstance()
+                MsgReqFragment.newInstance()
             }
             2 -> {
+                NaviCommandsFragment.newInstance()
+            }
+            3 -> {
                 FreeCommandsFragment.newInstance()
             }
             else -> {
@@ -47,6 +51,6 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
 
     override fun getCount(): Int {
         // Show 2 total pages.
-        return 4
+        return 5
     }
 }

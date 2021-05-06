@@ -21,6 +21,9 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabIndicatorFullWidth="true"
+            app:tabGravity="fill"
+            app:tabMode="scrollable"
             android:background="?attr/colorPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 

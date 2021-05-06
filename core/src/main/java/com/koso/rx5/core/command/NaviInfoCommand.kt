@@ -116,4 +116,20 @@ class NaviInfoCommand(
 
         return builder.toString()
     }
+
+    override fun header1(): Byte {
+        return 0xFF.toByte()
+    }
+
+    override fun header2(): Byte {
+        return 0x89.toByte()
+    }
+
+    override fun end1(): Byte {
+        return 0xFF.toByte()
+    }
+
+    override fun end2(): Byte {
+        return 0x34.toByte()
+    }
 }

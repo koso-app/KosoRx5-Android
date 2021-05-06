@@ -31,16 +31,18 @@ fun Int.toByteArray(num: Int): ByteArray {
 
 
 abstract class BaseCommand {
-    companion object {
-        const val HEADER1 = 0xFF.toByte()
-        const val HEADER2 = 0x89.toByte()
-        const val END1 = 0xFF.toByte()
-        const val END2 = 0x34.toByte()
-    }
 
     abstract fun value(): ByteArray
 
     abstract fun valueToString(): String
+
+    abstract fun header1(): Byte
+
+    abstract fun header2(): Byte
+
+    abstract fun end1(): Byte
+
+    abstract fun end2(): Byte
 
     private fun checkSum(array: ByteArray): Byte {
         var result = array[0]
@@ -56,13 +58,13 @@ abstract class BaseCommand {
 
     fun encode(): ByteArray {
         var result = concatenateByteArrays(
-            byteArrayOf(HEADER1),
-            byteArrayOf(HEADER2),
+            byteArrayOf(header1()),
+            byteArrayOf(header2()),
             byteArrayOf(totalLength().toByte()),
             value(),
             byteArrayOf(checkSum(value())),
-            byteArrayOf(END1),
-            byteArrayOf(END2)
+            byteArrayOf(end1()),
+            byteArrayOf(end2())
         )
         return result
     }
@@ -81,13 +83,13 @@ abstract class BaseCommand {
     override fun toString(): String {
         val builder = StringBuilder()
         builder.appendln("--------")
-        builder.appendln("HEADER1 = ${Utility.bytesToHex(byteArrayOf(HEADER1))}")
-        builder.appendln("HEADER2 = ${Utility.bytesToHex(byteArrayOf(HEADER2))}")
+        builder.appendln("HEADER1 = ${Utility.bytesToHex(byteArrayOf(header1()))}")
+        builder.appendln("HEADER2 = ${Utility.bytesToHex(byteArrayOf(header2()))}")
         builder.appendln("Length = ${Utility.bytesToHex(byteArrayOf(totalLength().toByte()))}")
         builder.appendln("Data = ${valueToString()}")
         builder.appendln("CheckSum = ${Utility.bytesToHex(byteArrayOf(checkSum(value())))}")
-        builder.appendln("END1 = ${Utility.bytesToHex(byteArrayOf(END1))}")
-        builder.appendln("END2 = ${Utility.bytesToHex(byteArrayOf(END2))}")
+        builder.appendln("END1 = ${Utility.bytesToHex(byteArrayOf(end1()))}")
+        builder.appendln("END2 = ${Utility.bytesToHex(byteArrayOf(end2()))}")
         builder.appendln("--------")
         return builder.toString()
     }
