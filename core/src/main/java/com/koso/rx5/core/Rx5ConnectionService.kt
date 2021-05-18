@@ -19,7 +19,7 @@ class Rx5ConnectionService : LifecycleService() {
 
     companion object {
         private val EXTRA_STOP = "extra_stop"
-        private var NOTIFICATION_ID = 9
+        private var NOTIFICATION_ID = 29
 
         fun startService(context: Context, macAddr: String, notifyId: Int) {
             NOTIFICATION_ID = notifyId
