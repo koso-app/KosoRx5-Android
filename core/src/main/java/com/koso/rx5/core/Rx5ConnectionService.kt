@@ -122,7 +122,7 @@ class Rx5ConnectionService : LifecycleService() {
             getNotificationBuilder(
                 this,
                 "",  // Channel id
-                NotificationManagerCompat.IMPORTANCE_DEFAULT
+                NotificationManagerCompat.IMPORTANCE_LOW
             )!!
                 .setContentTitle("RX5")
                 .setContentText("Connection service started")
