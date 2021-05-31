@@ -30,8 +30,8 @@ object Rx5Handler{
     /**
      * Start connection service
      */
-    fun startConnectService(context: Context, address: String){
-        Rx5ConnectionService.startService(context, address)
+    fun startConnectService(context: Context, address: String, notifyId: Int){
+        Rx5ConnectionService.startService(context, address, notifyId)
     }
 
     /**
