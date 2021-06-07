@@ -14,6 +14,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import java.nio.ByteBuffer
 import java.util.*
 
 
@@ -42,6 +43,8 @@ class Rx5Device(
 
 
     private val delimiters = 0x55
+
+
 
     /**
      *
@@ -75,7 +78,7 @@ class Rx5Device(
         registerStateChange(context)
     }
 
-    private fun unregisterDisconnect(context: Context){
+    private fun unregisterDisconnect(context: Context) {
         context.unregisterReceiver(bluetoothReceiver)
     }
 
@@ -106,12 +109,11 @@ class Rx5Device(
 
                     }
                 }
-            }, {t -> t.printStackTrace()})
+            }, { t -> t.printStackTrace() })
 
         compositeDisposable.add(dispo)
 
     }
-
 
 
     fun observeByteStream(): Flowable<Byte> {
@@ -139,11 +141,43 @@ class Rx5Device(
         rxBluetooth.cancelDiscovery()
     }
 
-    open fun connectAsClient(){
+    var buffer: ByteBuffer? = null
+
+    open fun connectAsClient() {
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
         val uuid = UUID.fromString(SERVICE_UUID)
         val device = bluetoothAdapter?.getRemoteDevice(mac)
         val disposable = rxBluetooth.connectAsClient(device, uuid)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe({ it ->
+                btConnection = BluetoothConnection(it)
+                btConnection?.observeByteStream()!!
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({ inByte ->
+                        when {
+                            buffer == null && inByte == 0xFF.toByte() -> {
+                                buffer = ByteBuffer.allocate(128)
+                            }
+                        }
+                        Log.d("rx5", String.format("%02X", inByte))
+
+                    }, {
+                        it.printStackTrace()
+                    })
+                Rx5Handler.setState(State.Connected)
+            }, { t ->
+                Log.d("bt", "connectAsClient: ${t.localizedMessage}")
+                Rx5Handler.setState(State.Disconnected)
+            })
+        Rx5Handler.setState(State.Connecting)
+        compositeDisposable.add(disposable)
+    }
+
+    open fun connectAsServer() {
+        val uuid = UUID.fromString(SERVICE_UUID)
+        val disposable = rxBluetooth.connectAsServer("Rx5", uuid)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe({
@@ -157,29 +191,6 @@ class Rx5Device(
                     })
                 Rx5Handler.setState(State.Connected)
             }, { t ->
-                Log.d("bt", "connectAsClient: ${t.localizedMessage}")
-                Rx5Handler.setState(State.Disconnected)
-            })
-        Rx5Handler.setState(State.Connecting)
-        compositeDisposable.add(disposable)
-    }
-
-    open fun connectAsServer(){
-        val uuid = UUID.fromString(SERVICE_UUID)
-        val disposable = rxBluetooth.connectAsServer("Rx5", uuid )
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe({
-                btConnection = BluetoothConnection(it)
-                btConnection?.observeByteStream()!!
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe({
-                    }, {
-                        it.printStackTrace()
-                    })
-                Rx5Handler.setState(State.Connected)
-            },{ t ->
                 t.printStackTrace()
                 Rx5Handler.setState(State.Disconnected)
             })
@@ -216,7 +227,7 @@ class Rx5Device(
         val dispo = rxBluetooth.observeAclEvent()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.computation())
-            .subscribe ({ aclEvent ->
+            .subscribe({ aclEvent ->
 
                 when (aclEvent.action) {
                     BluetoothDevice.ACTION_ACL_CONNECTED -> {
@@ -229,13 +240,13 @@ class Rx5Device(
                         Rx5Handler.setState(State.Disconnected)
                     }
                 }
-            }, {t -> t.printStackTrace()})
+            }, { t -> t.printStackTrace() })
 
         compositeDisposable.add(dispo)
     }
 
 
-    fun write(cmd: BaseCommand): Boolean{
+    fun write(cmd: BaseCommand): Boolean {
         Log.d("rx5", Utility.bytesToHex(cmd.encode()))
         Log.d("rx5", "------")
         Log.d("rx5", cmd.valueToString())
@@ -249,7 +260,7 @@ class Rx5Device(
         return btConnection?.send(bytes) ?: false
     }
 
-    private fun disconnect(){
+    private fun disconnect() {
         btConnection?.closeConnection()
         btConnection = null
     }

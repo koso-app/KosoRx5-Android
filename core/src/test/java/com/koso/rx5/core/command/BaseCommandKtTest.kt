@@ -8,9 +8,9 @@ class BaseCommandKtTest{
     @ExperimentalStdlibApi
     @Test
     fun testToByteArray(){
-        println(Utility.bytesToHex(128.toByteArray(4).reversedArray()))
-
+        val text = 123
+        val array = text.toByteArray(4)
+        println(array)
+        println(String(array))
     }
-
-
 }

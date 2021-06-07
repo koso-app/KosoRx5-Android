@@ -67,10 +67,8 @@ class ConnectFragment : Fragment() {
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribeOn(Schedulers.io())
             ?.subscribe({
-                viewModel.log("received byte: ${Utility.bytesToHex(byteArrayOf(it))}")
+                viewModel.log("received byte: ${String.format("%02X", it)}")
             }, {})
-
-
 
         dispo1?.let {
             compositeDisposable.add(it)
