@@ -36,9 +36,9 @@ class BlScanDialog : DialogFragment() {
                 BluetoothDevice.ACTION_FOUND -> {
                     // Discovery has found a device. Get the BluetoothDevice
                     // object and its info from the Intent.
-                    val device: BluetoothDevice =
+                    val device: BluetoothDevice? =
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    if (possibleDevice(device)) {
+                    if (device != null && possibleDevice(device)) {
                         val deviceName = device.name
                         if (deviceName == null || deviceName.isEmpty()) return
                         adapter.addFound(device)

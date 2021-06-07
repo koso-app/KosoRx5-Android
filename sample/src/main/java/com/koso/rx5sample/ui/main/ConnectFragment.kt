@@ -55,9 +55,14 @@ class ConnectFragment : Fragment() {
             vStart.performClick()
         }
     }
-    private val sharedPrefListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        if (key == SharedPreferenceHandler.PARAM_TARGET_MAC_ADDR) {
-            showDeviceAddress(SharedPreferenceHandler.targetMacAddress)
+    private val sharedPrefListener = object: SharedPreferences.OnSharedPreferenceChangeListener {
+        override fun onSharedPreferenceChanged(
+            sharedPreferences: SharedPreferences?,
+            key: String?
+        ) {
+            if (key == SharedPreferenceHandler.PARAM_TARGET_MAC_ADDR) {
+                showDeviceAddress(SharedPreferenceHandler.targetMacAddress)
+            }
         }
     }
 
@@ -161,7 +166,8 @@ class ConnectFragment : Fragment() {
                     else -> {
                         Rx5Handler.startConnectService(
                             activity as Context,
-                            SharedPreferenceHandler.targetMacAddress
+                            SharedPreferenceHandler.targetMacAddress,
+                            100
                         )
                     }
                 }
