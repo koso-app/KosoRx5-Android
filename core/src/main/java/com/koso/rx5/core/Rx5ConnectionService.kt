@@ -19,8 +19,10 @@ class Rx5ConnectionService : LifecycleService() {
 
     companion object {
         private val EXTRA_STOP = "extra_stop"
+        private var NOTIFICATION_ID = 29
 
-        fun startService(context: Context, macAddr: String) {
+        fun startService(context: Context, macAddr: String, notifyId: Int) {
+            NOTIFICATION_ID = notifyId
             val intent = Intent(context, Rx5ConnectionService::class.java)
             intent.putExtra("mac", macAddr)
             context.startService(intent)
@@ -39,10 +41,7 @@ class Rx5ConnectionService : LifecycleService() {
      */
     private val CHANNEL_ID = "RX5 Connection"
 
-    /**
-     * The id parameter for startForground()
-     */
-    private val ONGOING_NOTIFICATION_ID = 13
+
 
     private var macAddress: String = ""
 
@@ -123,7 +122,7 @@ class Rx5ConnectionService : LifecycleService() {
             getNotificationBuilder(
                 this,
                 "",  // Channel id
-                NotificationManagerCompat.IMPORTANCE_DEFAULT
+                NotificationManagerCompat.IMPORTANCE_LOW
             )!!
                 .setContentTitle("RX5")
                 .setContentText("Connection service started")
@@ -133,7 +132,7 @@ class Rx5ConnectionService : LifecycleService() {
                 .build()
         }
 
-        startForeground(ONGOING_NOTIFICATION_ID, notification)
+        startForeground(NOTIFICATION_ID, notification)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
