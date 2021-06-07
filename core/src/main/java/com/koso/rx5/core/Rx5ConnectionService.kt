@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Binder
 import android.os.Build
+import android.os.IBinder
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -41,8 +42,6 @@ class Rx5ConnectionService : LifecycleService() {
      */
     private val CHANNEL_ID = "RX5 Connection"
 
-
-
     private var macAddress: String = ""
 
     private val connectionStateObserver = Observer<Rx5Device.State> {
@@ -64,6 +63,8 @@ class Rx5ConnectionService : LifecycleService() {
         }
     }
 
+    val binder = ConnectServiceBinder()
+
     /**
      * Class used for the client Binder.  Because we know this service always
      * runs in the same process as its clients, we don't need to deal with IPC.
@@ -73,6 +74,10 @@ class Rx5ConnectionService : LifecycleService() {
         val serviceRx5: Rx5ConnectionService = this@Rx5ConnectionService
     }
 
+    override fun onBind(intent: Intent): IBinder? {
+        super.onBind(intent)
+        return binder
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
@@ -85,7 +90,7 @@ class Rx5ConnectionService : LifecycleService() {
             }
 
             if (Rx5Handler.STATE_LIVE.value == Rx5Device.State.Disconnected) {
-                Rx5Handler.rx5!!.connectAsClient()
+                Rx5Handler.rx5!!.connectAsClient(Rx5Handler.incomingCommandListener)
                 registerConnectionState()
             }
         }

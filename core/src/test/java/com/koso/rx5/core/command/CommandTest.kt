@@ -1,5 +1,7 @@
 package com.koso.rx5.core.command
 
+import com.koso.rx5.core.command.outgoing.NaviInfoCommand
+import com.koso.rx5.core.command.outgoing.toByteArray
 import com.koso.rx5.core.util.Utility
 import org.junit.Test
 

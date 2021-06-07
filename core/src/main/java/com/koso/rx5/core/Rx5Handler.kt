@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.ivbaranov.rxbluetooth.RxBluetooth
+import com.koso.rx5.core.command.incoming.BaseIncomingCommand
 import io.reactivex.Observable
 
 object Rx5Handler{
@@ -26,6 +27,17 @@ object Rx5Handler{
 
     var rx5: Rx5Device? = null
 
+    /**
+     * Listener of the incoming commands
+     */
+    val incomingCommandListener = object: Rx5Device.IncomingCommandListener{
+        override fun onCommandAvailable(cmd: BaseIncomingCommand) {
+            _incomingCommandLive.value = cmd
+        }
+    }
+    private val _incomingCommandLive = MutableLiveData<BaseIncomingCommand>()
+    fun incomingCommandLive(): LiveData<BaseIncomingCommand> = _incomingCommandLive
+
 
     /**
      * Start connection service
@@ -46,7 +58,7 @@ object Rx5Handler{
      *
      * @return RxJava Observable with BluetoothDevice found
      */
-    open fun observeDevices(rxBluetooth: RxBluetooth): Observable<BluetoothDevice> {
+    fun observeDevices(rxBluetooth: RxBluetooth): Observable<BluetoothDevice> {
         return rxBluetooth.observeDevices()
     }
 
@@ -54,7 +66,7 @@ object Rx5Handler{
     /**
      * Start the remote device discovery process.
      */
-    open fun startDiscovery(rxBluetooth: RxBluetooth) {
+    fun startDiscovery(rxBluetooth: RxBluetooth) {
 
         rxBluetooth.startDiscovery()
     }

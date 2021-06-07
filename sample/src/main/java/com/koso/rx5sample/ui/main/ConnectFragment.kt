@@ -43,13 +43,6 @@ class ConnectFragment : Fragment() {
      */
     private lateinit var viewModel: TabbedViewModel
 
-
-    /**
-     * Handles all observable disposables
-     */
-    private val compositeDisposable = CompositeDisposable()
-
-
     private val blSelectListener = object: BlScanDialog.BlSelectListener{
         override fun onSelect() {
             vStart.performClick()
@@ -68,15 +61,8 @@ class ConnectFragment : Fragment() {
 
     private fun subscribeByteStream() {
 
-        val dispo1 = Rx5Handler.rx5?.observeByteStream()
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribeOn(Schedulers.io())
-            ?.subscribe({
-                viewModel.log("received byte: ${String.format("%02X", it)}")
-            }, {})
-
-        dispo1?.let {
-            compositeDisposable.add(it)
+        Rx5Handler.incomingCommandLive().observe(this){
+            viewModel.log("received command: ${it.javaClass.simpleName}")
         }
     }
 
@@ -230,7 +216,6 @@ class ConnectFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable.clear()
     }
 
 }

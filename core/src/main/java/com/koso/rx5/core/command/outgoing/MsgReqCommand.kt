@@ -1,4 +1,4 @@
-package com.koso.rx5.core.command
+package com.koso.rx5.core.command.outgoing
 
 import com.koso.rx5.core.util.Utility
 import java.io.ByteArrayOutputStream
@@ -6,19 +6,19 @@ import java.lang.IllegalStateException
 
 class MsgReqCommand(val cmd: Int, val pollingList: List<PollingItem>): BaseCommand() {
     class ClearCommandBuilder {
-        fun build(): MsgReqCommand{
+        fun build(): MsgReqCommand {
             return MsgReqCommand(0, listOf())
         }
     }
 
     class ReqCommandBuilder{
         private val list = ArrayList<PollingItem>()
-        fun addItem(item: PollingItem): ReqCommandBuilder{
+        fun addItem(item: PollingItem): ReqCommandBuilder {
             list.add(item)
             return this
         }
 
-        fun build(): MsgReqCommand{
+        fun build(): MsgReqCommand {
             if(list.size > 0) {
                 return MsgReqCommand(128, list)
             }else{

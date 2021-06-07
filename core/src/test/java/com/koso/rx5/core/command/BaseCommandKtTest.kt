@@ -1,6 +1,6 @@
 package com.koso.rx5.core.command
 
-import com.koso.rx5.core.util.Utility
+import com.koso.rx5.core.command.outgoing.toByteArray
 import org.junit.Test
 
 class BaseCommandKtTest{

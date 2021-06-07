@@ -1,7 +1,6 @@
-package com.koso.rx5.core.command
+package com.koso.rx5.core.command.outgoing
 
 import com.koso.rx5.core.util.Utility
-import java.nio.charset.Charset
 
 
 class NaviInfoCommand(

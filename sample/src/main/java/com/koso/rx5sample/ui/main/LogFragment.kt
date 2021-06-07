@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.koso.rx5.core.Rx5Handler
 import com.koso.rx5sample.R
 import kotlinx.android.synthetic.main.fragment_log.*
 import java.util.*
@@ -26,8 +27,6 @@ class LogFragment : Fragment(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewmodel = ViewModelProvider(requireActivity()).get(TabbedViewModel::class.java)
-
-
     }
 
     private fun subscribeLogs() {

@@ -9,17 +9,18 @@ import android.content.IntentFilter
 import android.util.Log
 import com.github.ivbaranov.rxbluetooth.BluetoothConnection
 import com.github.ivbaranov.rxbluetooth.RxBluetooth
-import com.koso.rx5.core.command.BaseCommand
+import com.koso.rx5.core.command.incoming.AvailableIncomingCommands
+import com.koso.rx5.core.command.incoming.BaseIncomingCommand
+import com.koso.rx5.core.command.outgoing.BaseCommand
 import com.koso.rx5.core.util.Utility
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.nio.ByteBuffer
 import java.util.*
 
 
-class Rx5Device(
+open class Rx5Device(
     val context: Context,
     val mac: String,
     val SERVICE_UUID: String = "00001101-0000-1000-8000-00805F9B34FB"
@@ -42,9 +43,7 @@ class Rx5Device(
      */
     private val compositeDisposable = CompositeDisposable()
 
-
     private val delimiters = 0x55
-
 
 
     /**
@@ -142,9 +141,9 @@ class Rx5Device(
         rxBluetooth.cancelDiscovery()
     }
 
-    var buffer: ByteBuffer? = null
+    var buffer: MutableList<Byte> = mutableListOf()
 
-    open fun connectAsClient() {
+    open fun connectAsClient(listener: IncomingCommandListener) {
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
         val uuid = UUID.fromString(SERVICE_UUID)
         val device = bluetoothAdapter?.getRemoteDevice(mac)
@@ -156,24 +155,53 @@ class Rx5Device(
                 btConnection?.observeByteStream()!!
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe({ inByte ->
+                    .subscribe({ inByte: Byte ->
+                        if ((buffer.size == 0 && inByte == 0xFF.toByte()) || buffer.size > 0) {
+                            buffer.add(inByte)
+                        }
+
                         when {
-                            buffer == null && inByte == 0xFF.toByte() -> {
-                                buffer = ByteBuffer.allocate(128)
+                            buffer.size == 2 -> {
+                                val available = checkAvailableHead(buffer)
+                                if (!available) {
+                                    buffer.clear()
+                                }
+                            }
+                            buffer.size > 4 -> {
+                                val command = checkAvailableCommand(buffer)?.classObject?.newInstance()?.create(buffer)
+                                if(command != null){
+                                    listener.onCommandAvailable(command)
+                                    buffer.clear()
+                                }
                             }
                         }
-                        Log.d("rx5", String.format("%02X", inByte))
-
                     }, {
                         it.printStackTrace()
                     })
                 Rx5Handler.setState(State.Connected)
-            }, { t ->
-                Log.d("bt", "connectAsClient: ${t.localizedMessage}")
-                Rx5Handler.setState(State.Disconnected)
-            })
+            },
+                { t ->
+                    Log.d("bt", "connectAsClient: ${t.localizedMessage}")
+                    Rx5Handler.setState(State.Disconnected)
+                })
         Rx5Handler.setState(State.Connecting)
         compositeDisposable.add(disposable)
+    }
+
+    private fun checkAvailableCommand(buffer: MutableList<Byte>): AvailableIncomingCommands? {
+        AvailableIncomingCommands.values().forEach {
+            if (buffer[0] == it.header1 && buffer[1] == it.header2 &&
+                buffer[buffer.size - 2] == it.end1 && buffer[buffer.size - 1] == it.end2
+            ) return it
+        }
+        return null
+    }
+
+    private fun checkAvailableHead(buffer: MutableList<Byte>): Boolean {
+        AvailableIncomingCommands.values().forEach {
+            if (buffer[0] == it.header1 && buffer[1] == it.header2) return true
+        }
+        return false
     }
 
     open fun connectAsServer() {
@@ -272,5 +300,9 @@ class Rx5Device(
         cancelDiscovery()
         compositeDisposable.clear()
         Rx5Handler.setState(State.Disconnected)
+    }
+
+    interface IncomingCommandListener{
+        fun onCommandAvailable(cmd: BaseIncomingCommand)
     }
 }

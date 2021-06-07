@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.koso.rx5.core.Rx5Handler
-import com.koso.rx5.core.command.MsgReqCommand
+import com.koso.rx5.core.command.outgoing.MsgReqCommand
 import com.koso.rx5sample.R
 import kotlinx.android.synthetic.main.fragment_msg_req.*
 

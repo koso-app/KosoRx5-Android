@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.koso.rx5.core.Rx5Device
 import com.koso.rx5.core.Rx5ConnectionService
 import com.koso.rx5.core.Rx5Handler
-import com.koso.rx5.core.command.NaviInfoCommand
+import com.koso.rx5.core.command.outgoing.NaviInfoCommand
 import com.koso.rx5sample.R
 import kotlinx.android.synthetic.main.fragment_navicommands.*
 
