@@ -11,7 +11,7 @@ import com.github.ivbaranov.rxbluetooth.BluetoothConnection
 import com.github.ivbaranov.rxbluetooth.RxBluetooth
 import com.koso.rx5.core.command.incoming.AvailableIncomingCommands
 import com.koso.rx5.core.command.incoming.BaseIncomingCommand
-import com.koso.rx5.core.command.outgoing.BaseCommand
+import com.koso.rx5.core.command.outgoing.BaseOutgoingCommand
 import com.koso.rx5.core.util.Utility
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -275,7 +275,7 @@ open class Rx5Device(
     }
 
 
-    fun write(cmd: BaseCommand): Boolean {
+    fun write(cmd: BaseOutgoingCommand): Boolean {
         Log.d("rx5", Utility.bytesToHex(cmd.encode()))
         Log.d("rx5", "------")
         Log.d("rx5", cmd.valueToString())

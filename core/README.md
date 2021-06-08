@@ -20,3 +20,5 @@ Declare the Bluetooth permission(s) in your application manifest file. For examp
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.15'
     implementation 'com.github.ivbaranov:rxbluetooth2:2.1.1'
+    
+## BT protocol

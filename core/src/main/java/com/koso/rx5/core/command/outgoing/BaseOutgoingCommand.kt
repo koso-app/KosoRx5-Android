@@ -29,7 +29,7 @@ fun Int.toByteArray(num: Int): ByteArray {
 }
 
 
-abstract class BaseCommand {
+abstract class BaseOutgoingCommand {
 
     abstract fun value(): ByteArray
 

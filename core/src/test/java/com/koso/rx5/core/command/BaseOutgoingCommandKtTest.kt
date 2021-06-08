@@ -3,7 +3,7 @@ package com.koso.rx5.core.command
 import com.koso.rx5.core.command.outgoing.toByteArray
 import org.junit.Test
 
-class BaseCommandKtTest{
+class BaseOutgoingCommandKtTest{
 
     @ExperimentalStdlibApi
     @Test
