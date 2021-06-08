@@ -4,10 +4,10 @@ import com.koso.rx5.core.util.Utility
 import java.io.ByteArrayOutputStream
 import java.lang.IllegalStateException
 
-class MsgReqOutgoingCommand(val cmd: Int, val pollingList: List<PollingItem>): BaseOutgoingCommand() {
+class MsgReqCommand(val cmd: Int, val pollingList: List<PollingItem>): BaseOutgoingCommand() {
     class ClearCommandBuilder {
-        fun build(): MsgReqOutgoingCommand {
-            return MsgReqOutgoingCommand(0, listOf())
+        fun build(): MsgReqCommand {
+            return MsgReqCommand(0, listOf())
         }
     }
 
@@ -18,9 +18,9 @@ class MsgReqOutgoingCommand(val cmd: Int, val pollingList: List<PollingItem>): B
             return this
         }
 
-        fun build(): MsgReqOutgoingCommand {
+        fun build(): MsgReqCommand {
             if(list.size > 0) {
-                return MsgReqOutgoingCommand(128, list)
+                return MsgReqCommand(128, list)
             }else{
                 throw IllegalStateException("No any polling item added in the request list")
             }

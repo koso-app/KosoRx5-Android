@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.koso.rx5.core.Rx5Handler
-import com.koso.rx5.core.command.outgoing.MsgReqOutgoingCommand
+import com.koso.rx5.core.command.outgoing.MsgReqCommand
 import com.koso.rx5sample.R
 import kotlinx.android.synthetic.main.fragment_msg_req.*
 
@@ -38,14 +38,14 @@ class MsgReqFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vClear.setOnClickListener{
-            val command = MsgReqOutgoingCommand.ClearCommandBuilder().build()
+            val command = MsgReqCommand.ClearCommandBuilder().build()
             val ok = Rx5Handler.rx5!!.write(command)
         }
 
         vRequst.setOnClickListener{
-            val command = MsgReqOutgoingCommand.ReqCommandBuilder().apply {
-                if(vSwitch80.isChecked) this.addItem(MsgReqOutgoingCommand.PollingItem(0x80, vInput80.text.toString().toInt()))
-                if(vSwitch81.isChecked) this.addItem(MsgReqOutgoingCommand.PollingItem(0x81, vInput81.text.toString().toInt()))
+            val command = MsgReqCommand.ReqCommandBuilder().apply {
+                if(vSwitch80.isChecked) this.addItem(MsgReqCommand.PollingItem(0x80, vInput80.text.toString().toInt()))
+                if(vSwitch81.isChecked) this.addItem(MsgReqCommand.PollingItem(0x81, vInput81.text.toString().toInt()))
             }.build()
 
             val ok = Rx5Handler.rx5!!.write(command)
