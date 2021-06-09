@@ -23,7 +23,7 @@ class RuntimeInfo2Command : BaseIncomingCommand() {
     var trip_2_average_speed = 0 //16bits
     var trip_2_average_consume = 0 //16bits
 
-    var trip_time = 0 //自動騎乘時間, 32bits
+    var trip_a = 0 //自動騎乘時間, 32bits
     var al_time = 0 //總時間紀錄, 32bits
     var fuel_range = 0 //km, 32bits
     var service_DST = 0 //剩餘保養里程, 32bits
@@ -46,14 +46,14 @@ class RuntimeInfo2Command : BaseIncomingCommand() {
             put(rawData[7])
         }.getInt()
 
-        average_speed = ByteBuffer.allocate(4).apply {
+        rd_time = ByteBuffer.allocate(4).apply {
             put(rawData[8])
             put(rawData[9])
             put(rawData[10])
             put(rawData[11])
         }.getInt()
 
-        rd_time = ByteBuffer.allocate(2).apply {
+        average_speed = ByteBuffer.allocate(2).apply {
             put(rawData[12])
             put(rawData[13])
         }.getShort().toInt()
@@ -76,10 +76,12 @@ class RuntimeInfo2Command : BaseIncomingCommand() {
             put(rawData[22])
             put(rawData[23])
         }.getInt()
+
         trip_1_average_speed = ByteBuffer.allocate(2).apply {
             put(rawData[24])
             put(rawData[25])
         }.getShort().toInt()
+
         trip_1_average_consume = ByteBuffer.allocate(2).apply {
             put(rawData[26])
             put(rawData[27])
@@ -98,32 +100,38 @@ class RuntimeInfo2Command : BaseIncomingCommand() {
             put(rawData[34])
             put(rawData[35])
         }.getInt()
+
         trip_2_average_speed = ByteBuffer.allocate(2).apply {
             put(rawData[36])
             put(rawData[37])
         }.getShort().toInt()
+
         trip_2_average_consume = ByteBuffer.allocate(2).apply {
             put(rawData[38])
             put(rawData[39])
         }.getShort().toInt()
-        trip_time = ByteBuffer.allocate(4).apply {
+
+        trip_a = ByteBuffer.allocate(4).apply {
             put(rawData[40])
             put(rawData[41])
             put(rawData[42])
             put(rawData[43])
         }.getInt()
+
         al_time = ByteBuffer.allocate(4).apply {
             put(rawData[44])
             put(rawData[45])
             put(rawData[46])
             put(rawData[47])
         }.getInt()
+
         service_DST = ByteBuffer.allocate(4).apply {
             put(rawData[48])
             put(rawData[49])
             put(rawData[50])
             put(rawData[51])
         }.getInt()
+
         fuel_range = ByteBuffer.allocate(4).apply {
             put(rawData[52])
             put(rawData[53])

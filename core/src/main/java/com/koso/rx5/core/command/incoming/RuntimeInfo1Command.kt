@@ -1,6 +1,7 @@
 package com.koso.rx5.core.command.incoming
 
 import android.util.Log
+import java.lang.Exception
 import java.nio.ByteBuffer
 
 class RuntimeInfo1Command: BaseIncomingCommand() {
@@ -13,24 +14,34 @@ class RuntimeInfo1Command: BaseIncomingCommand() {
     var fuel = 0   // Fuel Level (格數:bit0~6 , 警告bit7)
 
     override fun parseData(rawData: MutableList<Byte>) {
-        speed = ByteBuffer.allocate(2).apply {
-            put(rawData[0])
-            put(rawData[1])
-        }.getShort(0).toInt()
-        rpm = ByteBuffer.allocate(2).apply {
-            put(rawData[2])
-            put(rawData[3])
-        }.getShort(0).toInt()
-        batt_vc = ByteBuffer.allocate(2).apply {
-            put(rawData[4])
-            put(rawData[5])
-        }.getShort(0).toInt()
-        consume = ByteBuffer.allocate(2).apply {
-            put(rawData[6])
-            put(rawData[7])
-        }.getShort(0).toInt()
-        gear = rawData[8].toInt()
-        fuel = rawData[9].toInt()
+        try {
+            speed = ByteBuffer.allocate(2).apply {
+                put(rawData[0])
+                put(rawData[1])
+            }.getShort(0).toInt()
+
+            rpm = ByteBuffer.allocate(2).apply {
+                put(rawData[2])
+                put(rawData[3])
+            }.getShort(0).toInt()
+
+            batt_vc = ByteBuffer.allocate(2).apply {
+                put(rawData[4])
+                put(rawData[5])
+            }.getShort(0).toInt()
+
+            consume = ByteBuffer.allocate(2).apply {
+                put(rawData[6])
+                put(rawData[7])
+            }.getShort(0).toInt()
+
+            gear = rawData[8].toInt()
+
+            fuel = rawData[9].toInt()
+
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
         Log.d("rx5", toString())
     }
 
