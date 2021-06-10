@@ -17,7 +17,6 @@ class NaviInfoCommand(
     val navitime: Int,          //int          navitime; //導航所需時間 單位:分          an.navitime = 30;
     val gpsnum: Int,            //int          gpsnum; //GPS 可用衛星(ACTIVE)數          an.gpsnum = 12;
     val gpsdir: Int
-
 ) : BaseOutgoingCommand() {
     override fun value(): ByteArray {
 
