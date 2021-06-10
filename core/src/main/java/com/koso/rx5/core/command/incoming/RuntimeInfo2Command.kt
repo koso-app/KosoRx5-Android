@@ -32,110 +32,110 @@ class RuntimeInfo2Command : BaseIncomingCommand() {
         Log.d("rx5", "length: $length")
         try {
             odo = ByteBuffer.allocate(4).apply {
-                put(rawData[0])
-                put(rawData[1])
-                put(rawData[2])
                 put(rawData[3])
+                put(rawData[2])
+                put(rawData[1])
+                put(rawData[0])
             }.getInt(0)
 
             odo_total = ByteBuffer.allocate(4).apply {
-                put(rawData[4])
-                put(rawData[5])
-                put(rawData[6])
                 put(rawData[7])
+                put(rawData[6])
+                put(rawData[5])
+                put(rawData[4])
             }.getInt(0)
 
             rd_time = ByteBuffer.allocate(4).apply {
-                put(rawData[8])
-                put(rawData[9])
-                put(rawData[10])
                 put(rawData[11])
+                put(rawData[10])
+                put(rawData[9])
+                put(rawData[8])
             }.getInt(0)
 
             average_speed = ByteBuffer.allocate(2).apply {
-                put(rawData[12])
                 put(rawData[13])
+                put(rawData[12])
             }.getShort(0).toInt()
 
             average_consume = ByteBuffer.allocate(2).apply {
-                put(rawData[14])
                 put(rawData[15])
+                put(rawData[14])
             }.getShort(0).toInt()
 
             trip_1 = ByteBuffer.allocate(4).apply {
-                put(rawData[16])
-                put(rawData[17])
-                put(rawData[18])
                 put(rawData[19])
+                put(rawData[18])
+                put(rawData[17])
+                put(rawData[16])
             }.getInt(0)
 
             trip_1_time = ByteBuffer.allocate(4).apply {
-                put(rawData[20])
-                put(rawData[21])
-                put(rawData[22])
                 put(rawData[23])
+                put(rawData[22])
+                put(rawData[21])
+                put(rawData[20])
             }.getInt(0)
 
             trip_1_average_speed = ByteBuffer.allocate(2).apply {
-                put(rawData[24])
                 put(rawData[25])
+                put(rawData[24])
             }.getShort(0).toInt()
 
             trip_1_average_consume = ByteBuffer.allocate(2).apply {
-                put(rawData[26])
                 put(rawData[27])
+                put(rawData[26])
             }.getShort(0).toInt()
 
             trip_2 = ByteBuffer.allocate(4).apply {
-                put(rawData[28])
-                put(rawData[29])
-                put(rawData[30])
                 put(rawData[31])
+                put(rawData[30])
+                put(rawData[29])
+                put(rawData[28])
             }.getInt(0)
 
             trip_2_time = ByteBuffer.allocate(4).apply {
-                put(rawData[32])
-                put(rawData[33])
-                put(rawData[34])
                 put(rawData[35])
+                put(rawData[34])
+                put(rawData[33])
+                put(rawData[32])
             }.getInt(0)
 
             trip_2_average_speed = ByteBuffer.allocate(2).apply {
-                put(rawData[36])
                 put(rawData[37])
+                put(rawData[36])
             }.getShort(0).toInt()
 
             trip_2_average_consume = ByteBuffer.allocate(2).apply {
-                put(rawData[38])
                 put(rawData[39])
+                put(rawData[38])
             }.getShort(0).toInt()
 
             trip_a = ByteBuffer.allocate(4).apply {
-                put(rawData[40])
-                put(rawData[41])
-                put(rawData[42])
                 put(rawData[43])
+                put(rawData[42])
+                put(rawData[41])
+                put(rawData[40])
             }.getInt(0)
 
             al_time = ByteBuffer.allocate(4).apply {
-                put(rawData[44])
-                put(rawData[45])
-                put(rawData[46])
                 put(rawData[47])
+                put(rawData[46])
+                put(rawData[45])
+                put(rawData[44])
             }.getInt(0)
 
             service_DST = ByteBuffer.allocate(4).apply {
-                put(rawData[48])
-                put(rawData[49])
-                put(rawData[50])
                 put(rawData[51])
+                put(rawData[50])
+                put(rawData[49])
+                put(rawData[48])
             }.getInt(0)
 
             fuel_range = ByteBuffer.allocate(4).apply {
-                put(rawData[52])
-                put(rawData[53])
-                put(rawData[54])
                 put(rawData[55])
+                put(rawData[54])
+                put(rawData[53])
+                put(rawData[52])
             }.getInt(0)
         }catch (e: Exception){
             e.printStackTrace()

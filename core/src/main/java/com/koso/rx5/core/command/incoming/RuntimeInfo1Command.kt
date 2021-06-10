@@ -16,23 +16,23 @@ class RuntimeInfo1Command: BaseIncomingCommand() {
     override fun parseData(rawData: MutableList<Byte>) {
         try {
             speed = ByteBuffer.allocate(2).apply {
-                put(rawData[0])
                 put(rawData[1])
+                put(rawData[0])
             }.getShort(0).toInt()
 
             rpm = ByteBuffer.allocate(2).apply {
-                put(rawData[2])
                 put(rawData[3])
+                put(rawData[2])
             }.getShort(0).toInt()
 
             batt_vc = ByteBuffer.allocate(2).apply {
-                put(rawData[4])
                 put(rawData[5])
+                put(rawData[4])
             }.getShort(0).toInt()
 
             consume = ByteBuffer.allocate(2).apply {
-                put(rawData[6])
                 put(rawData[7])
+                put(rawData[6])
             }.getShort(0).toInt()
 
             gear = rawData[8].toInt()
