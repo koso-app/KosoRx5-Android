@@ -91,25 +91,27 @@ class NaviInfoCommand(
 
     override fun valueToString(): String {
         val builder = StringBuilder()
-        builder.appendln("{")
-        builder.appendln("NaviMode = ${Utility.bytesToHex(getNaviMode())}")
-        builder.appendln("CityName = ${Utility.bytesToHex(getCtName())}")
-        builder.appendln("RoadName = ${Utility.bytesToHex(getRoadName())}")
-        builder.appendln("DoorNum = ${Utility.bytesToHex(getDoorNum())}")
-        builder.appendln("LimitSpeed = ${Utility.bytesToHex(getLimitSpeed())}")
-        builder.appendln(
-            "NextRoadName = ${Utility.bytesToHex(
-                getNextRoadName()
-            )}"
+        builder.appendLine("{")
+        builder.appendLine("NaviMode = ${Utility.bytesToHex(getNaviMode())}")
+        builder.appendLine("CityName = ${Utility.bytesToHex(getCtName())}")
+        builder.appendLine("RoadName = ${Utility.bytesToHex(getRoadName())}")
+        builder.appendLine("DoorNum = ${Utility.bytesToHex(getDoorNum())}")
+        builder.appendLine("LimitSpeed = ${Utility.bytesToHex(getLimitSpeed())}")
+        builder.appendLine(
+            "NextRoadName = ${
+                Utility.bytesToHex(
+                    getNextRoadName()
+                )
+            }"
         )
-        builder.appendln("NextDist = ${Utility.bytesToHex(getNextDist())}")
-        builder.appendln("NextTurn = ${Utility.bytesToHex(getNextTurn())}")
-        builder.appendln("Camera = ${Utility.bytesToHex(getCamera())}")
-        builder.appendln("NaviDist = ${Utility.bytesToHex(getNaviDist())}")
-        builder.appendln("NaviTime = ${Utility.bytesToHex(getNaviTime())}")
-        builder.appendln("GpsNum = ${Utility.bytesToHex(getGpsNum())}")
-        builder.appendln("GpsDir = ${Utility.bytesToHex(getGpsDir())}")
-        builder.appendln("}")
+        builder.appendLine("NextDist = ${Utility.bytesToHex(getNextDist())}")
+        builder.appendLine("NextTurn = ${Utility.bytesToHex(getNextTurn())}")
+        builder.appendLine("Camera = ${Utility.bytesToHex(getCamera())}")
+        builder.appendLine("NaviDist = ${Utility.bytesToHex(getNaviDist())}")
+        builder.appendLine("NaviTime = ${Utility.bytesToHex(getNaviTime())}")
+        builder.appendLine("GpsNum = ${Utility.bytesToHex(getGpsNum())}")
+        builder.appendLine("GpsDir = ${Utility.bytesToHex(getGpsDir())}")
+        builder.appendLine("}")
 
         return builder.toString()
     }
