@@ -32,7 +32,7 @@ object Rx5Handler{
      */
     val incomingCommandListener = object: Rx5Device.IncomingCommandListener{
         override fun onCommandAvailable(cmd: BaseIncomingCommand) {
-            _incomingCommandLive.value = cmd
+            _incomingCommandLive.postValue(cmd)
         }
     }
     private val _incomingCommandLive = MutableLiveData<BaseIncomingCommand>()

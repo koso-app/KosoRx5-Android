@@ -3,7 +3,6 @@ package com.koso.rx5.core.command.outgoing
 import com.koso.rx5.core.util.Utility
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.lang.StringBuilder
 import java.util.*
 import kotlin.experimental.xor
 
@@ -15,7 +14,7 @@ fun String.toByteArray(num: Int): ByteArray {
             break
         }
 
-        bytes[i] = this[i].toByte()
+        bytes[i] = this[i].code.toByte()
     }
     return bytes
 }
@@ -91,15 +90,15 @@ abstract class BaseOutgoingCommand {
 
     override fun toString(): String {
         val builder = StringBuilder()
-        builder.appendln("--------")
-        builder.appendln("HEADER1 = ${Utility.bytesToHex(byteArrayOf(header1()))}")
-        builder.appendln("HEADER2 = ${Utility.bytesToHex(byteArrayOf(header2()))}")
-        builder.appendln("Length = ${Utility.bytesToHex(byteArrayOf(totalLength().toByte()))}")
-        builder.appendln("Data = ${valueToString()}")
-        builder.appendln("CheckSum = ${Utility.bytesToHex(byteArrayOf(checkSum(value())))}")
-        builder.appendln("END1 = ${Utility.bytesToHex(byteArrayOf(end1()))}")
-        builder.appendln("END2 = ${Utility.bytesToHex(byteArrayOf(end2()))}")
-        builder.appendln("--------")
+        builder.appendLine("--------")
+        builder.appendLine("HEADER1 = ${Utility.bytesToHex(byteArrayOf(header1()))}")
+        builder.appendLine("HEADER2 = ${Utility.bytesToHex(byteArrayOf(header2()))}")
+        builder.appendLine("Length = ${Utility.bytesToHex(byteArrayOf(totalLength().toByte()))}")
+        builder.appendLine("Data = ${valueToString()}")
+        builder.appendLine("CheckSum = ${Utility.bytesToHex(byteArrayOf(checkSum(value())))}")
+        builder.appendLine("END1 = ${Utility.bytesToHex(byteArrayOf(end1()))}")
+        builder.appendLine("END2 = ${Utility.bytesToHex(byteArrayOf(end2()))}")
+        builder.appendLine("--------")
         return builder.toString()
     }
 }
