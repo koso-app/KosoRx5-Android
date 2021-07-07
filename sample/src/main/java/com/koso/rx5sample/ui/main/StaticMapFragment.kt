@@ -43,6 +43,7 @@ class StaticMapFragment : Fragment() {
             val ok = Rx5Handler.rx5!!.write(cmd)
             if (ok) {
                 viewmodel.log(cmd.toString())
+                Toast.makeText(requireContext(), "已送出圖片", Toast.LENGTH_SHORT).show()
             }else{
                 val msg = "Failed, connection is not available"
                 viewmodel.log(msg)
