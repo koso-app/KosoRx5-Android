@@ -47,7 +47,7 @@ class StaticMapCommand(
             val result = mutableListOf<StaticMapCommand>()
             result.add(StaticMapCommand(0, image.size.toByteArray(4).reversedArray()))
             var index = 0
-            while(index * 512 < image.size){
+            while(index * 512 <= image.size){
                 val endIndex = index + 1
                 val start = index * 512
                 val end = kotlin.math.min(endIndex * 512, image.size)

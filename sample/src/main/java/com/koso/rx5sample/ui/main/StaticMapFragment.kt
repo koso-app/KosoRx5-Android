@@ -1,12 +1,15 @@
 package com.koso.rx5sample.ui.main
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.android.volley.Response
@@ -29,15 +32,17 @@ class StaticMapFragment : Fragment() {
     private lateinit var viewmodel: TabbedViewModel
     val bitmapWidth = 242
     val bitmapHeith = 282
-
+    var quality = 80
+    @SuppressLint("SetTextI18n")
     private val responseListener = Response.Listener<Bitmap> {
 
-        vImage.setImageBitmap(it)
-        vState.text = "${it.byteCount} Bytes"
 
-        val buffer = ByteBuffer.allocate(it.byteCount)
-        it.copyPixelsToBuffer(buffer)
-        val bytes = buffer.array()
+        val stream = ByteArrayOutputStream()
+
+        it.compress(Bitmap.CompressFormat.JPEG, quality, stream);
+        val bytes = stream.toByteArray()
+        vImage.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.size))
+        vState.text = "${bytes.count()} Bytes (quality: $quality%)"
         val cmds = StaticMapCommand.createFromBytes(bytes)
 
         if(Rx5Handler.rx5 != null) {
@@ -82,16 +87,30 @@ class StaticMapFragment : Fragment() {
 
     private fun initViews() {
         vButton.setOnClickListener{
-            val url = "https://maps.googleapis.com/maps/api/staticmap?center=22.992461322797763,120.20515240183124&zoom=15&size=242x282&maptype=roadmap&markers=color:blue%7Clabel:S%7C22.994947455674406,120.20556867649405&markers=color:green%7Clabel:G%7C22.98997518992112,120.20473612716843&key=AIzaSyBmsJg-P3oQVgdEkP3O8f7jEuF0cSnQNXE&path=weight:3%7Ccolor:red%7Cenc:mejkCyst|UbFp@jAJpANAT@ZHZPTVLFBF@`@@RCXWVg@BKl@B|EZxCPH?"
+            val url = "https://maps.googleapis.com/maps/api/staticmap?center=22.992461322797763,120.20515240183124&zoom=15&format=jpg&size=242x282&maptype=roadmap&markers=color:blue%7Clabel:S%7C22.994947455674406,120.20556867649405&markers=color:green%7Clabel:G%7C22.98997518992112,120.20473612716843&key=AIzaSyBmsJg-P3oQVgdEkP3O8f7jEuF0cSnQNXE&path=weight:3%7Ccolor:red%7Cenc:mejkCyst|UbFp@jAJpANAT@ZHZPTVLFBF@`@@RCXWVg@BKl@B|EZxCPH?"
             fetchStaticMap(url)
             vState.text = "請求中"
         }
+
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                quality = progress * 10
+                vQuality.text = "quality = $quality"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+        })
     }
 
     private fun fetchStaticMap(url: String) {
 
         val queue = Volley.newRequestQueue(requireContext())
-        val imageRequest = ImageRequest(url, responseListener, bitmapWidth, bitmapHeith, ImageView.ScaleType.CENTER, Bitmap.Config.ARGB_8888, errorListener)
+        val imageRequest = ImageRequest(url, responseListener, bitmapWidth, bitmapHeith, ImageView.ScaleType.FIT_START, Bitmap.Config.RGB_565, errorListener)
         queue.add(imageRequest)
     }
 
