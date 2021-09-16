@@ -17,6 +17,7 @@ import com.koso.rx5.core.command.outgoing.StaticMapCommand
 import com.koso.rx5sample.R
 import kotlinx.android.synthetic.main.fragment_static_map.*
 import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
 
 
 /**
@@ -34,20 +35,21 @@ class StaticMapFragment : Fragment() {
         vImage.setImageBitmap(it)
         vState.text = "${it.byteCount} Bytes"
 
-        val bos = ByteArrayOutputStream()
-        it.compress(Bitmap.CompressFormat.JPEG, 100, bos)
-        val bites = bos.toByteArray()
-        val cmd = StaticMapCommand(bites)
+        val buffer = ByteBuffer.allocate(it.byteCount)
+        it.copyPixelsToBuffer(buffer)
+        val bytes = buffer.array()
+        val cmds = StaticMapCommand.createFromBytes(bytes)
 
         if(Rx5Handler.rx5 != null) {
-            val ok = Rx5Handler.rx5!!.write(cmd)
-            if (ok) {
-                viewmodel.log(cmd.toString())
-                Toast.makeText(requireContext(), "已送出圖片", Toast.LENGTH_SHORT).show()
-            }else{
-                val msg = "Failed, connection is not available"
-                viewmodel.log(msg)
-                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+            cmds.forEach { cmd ->
+                val ok = Rx5Handler.rx5!!.write(cmd)
+                if (ok) {
+                    viewmodel.log(cmd.toString())
+
+                } else {
+                    val msg = "Failed, connection is not available"
+                    viewmodel.log(msg)
+                }
             }
         }else{
             val msg = "Failed, connection is not available"

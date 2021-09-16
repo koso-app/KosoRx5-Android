@@ -146,9 +146,6 @@ class ConnectFragment : Fragment() {
                     Rx5Device.State.Connected -> {
                         Rx5Handler.stopConnectService(requireActivity())
                     }
-                    Rx5Device.State.Connecting -> {
-                        Rx5Handler.stopConnectService(requireActivity())
-                    }
                     else -> {
                         Rx5Handler.startConnectService(
                             activity as Context,

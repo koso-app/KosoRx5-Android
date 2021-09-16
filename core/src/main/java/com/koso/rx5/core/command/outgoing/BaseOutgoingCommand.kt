@@ -42,7 +42,7 @@ abstract class BaseOutgoingCommand {
 
     abstract fun end2(): Byte
 
-    private fun checkSum(array: ByteArray): Byte {
+    fun checkSum(array: ByteArray): Byte {
         var result = array[0]
         for (i in 1 until array.size) {
             result = result xor array[i]
@@ -54,8 +54,8 @@ abstract class BaseOutgoingCommand {
         return value().size
     }
 
-    fun encode(): ByteArray {
-        var result = concatenateByteArrays(
+    open fun encode(): ByteArray {
+        val result = concatenateByteArrays(
             byteArrayOf(header1()),
             byteArrayOf(header2()),
             byteArrayOf(totalLength().toByte()),

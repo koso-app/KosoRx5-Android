@@ -152,7 +152,7 @@ open class Rx5Device(
             .subscribeOn(Schedulers.io())
             .subscribe({ it ->
                 btConnection = BluetoothConnection(it)
-                btConnection?.observeByteStream()!!
+                val dispo = btConnection?.observeByteStream()!!
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe({ inByte: Byte ->
@@ -179,6 +179,7 @@ open class Rx5Device(
                         it.printStackTrace()
                     })
                 Rx5Handler.setState(State.Connected)
+                compositeDisposable.add(dispo)
             },
                 { t ->
                     Log.d("bt", "connectAsClient: ${t.localizedMessage}")
@@ -294,11 +295,14 @@ open class Rx5Device(
         btConnection = null
     }
 
+
+
     open fun destory() {
+
+        compositeDisposable.dispose()
         unregisterDisconnect(context = context)
-        disconnect()
         cancelDiscovery()
-        compositeDisposable.clear()
+        disconnect()
         Rx5Handler.setState(State.Disconnected)
     }
 
