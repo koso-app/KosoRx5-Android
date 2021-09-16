@@ -42,6 +42,7 @@
         android:layout_height="20dp"
         android:max="10"
         android:progress="8"
+        android:layout_marginTop="@dimen/l_space"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/vState"/>
@@ -50,9 +51,26 @@
         android:id="@+id/vQuality"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="80"
+        android:text="quality = 80"
         app:layout_constraintTop_toBottomOf="@id/seekBar"
         app:layout_constraintStart_toStartOf="@id/seekBar"
         app:layout_constraintEnd_toEndOf="@id/seekBar"
         />
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Interval (ms)"
+        android:layout_marginTop="@dimen/l_space"
+        app:layout_constraintTop_toBottomOf="@id/vQuality"
+        app:layout_constraintStart_toStartOf="@id/vQuality"
+        app:layout_constraintEnd_toEndOf="@id/vQuality">
+    <EditText
+        android:id="@+id/vInterval"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:text="50"
+
+        />
+    </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

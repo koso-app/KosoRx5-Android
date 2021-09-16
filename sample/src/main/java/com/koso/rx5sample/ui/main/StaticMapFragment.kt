@@ -19,7 +19,12 @@ import com.koso.rx5.core.Rx5Handler
 import com.koso.rx5.core.command.outgoing.StaticMapCommand
 import com.koso.rx5sample.R
 import kotlinx.android.synthetic.main.fragment_static_map.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import java.lang.Exception
 import java.nio.ByteBuffer
 
 
@@ -42,20 +47,35 @@ class StaticMapFragment : Fragment() {
         it.compress(Bitmap.CompressFormat.JPEG, quality, stream);
         val bytes = stream.toByteArray()
         vImage.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.size))
-        vState.text = "${bytes.count()} Bytes (quality: $quality%)"
+
         val cmds = StaticMapCommand.createFromBytes(bytes)
 
         if(Rx5Handler.rx5 != null) {
-            cmds.forEach { cmd ->
-                val ok = Rx5Handler.rx5!!.write(cmd)
-                if (ok) {
-                    viewmodel.log(cmd.toString())
+            var index = 0
+            val timestamp = System.currentTimeMillis()
+            GlobalScope.launch(Dispatchers.Main) {
+                cmds.forEach { cmd ->
+                    val ok = Rx5Handler.rx5!!.write(cmd)
+                    if (ok) {
+                        viewmodel.log(cmd.toString())
 
-                } else {
-                    val msg = "Failed, connection is not available"
-                    viewmodel.log(msg)
+                    } else {
+                        val msg = "Failed, connection is not available"
+                        viewmodel.log(msg)
+                    }
+                    val interval = vInterval.text.toString()
+                    try {
+                        delay(interval.toLong())
+                    }catch (e: Exception){
+
+                    }
+                    index += 1
+                    vState.text = "$index/${cmds.count()} transactions (quality: $quality%)"
                 }
+                val second = (System.currentTimeMillis() - timestamp) / 1000f
+                vState.text = "${bytes.count()} Bytes in ${String.format("%.3f", second)} s (quality: $quality%)"
             }
+
         }else{
             val msg = "Failed, connection is not available"
             viewmodel.log(msg)
