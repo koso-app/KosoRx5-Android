@@ -11,6 +11,7 @@ private val TAB_TITLES = arrayOf(
     R.string.tab_text_msgreq,
     R.string.tab_text_navi,
     R.string.tab_text_free,
+    R.string.tab_text_staticmap,
     R.string.tab_text_log
 )
 
@@ -37,6 +38,9 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
             3 -> {
                 FreeCommandsFragment.newInstance()
             }
+            4 -> {
+                StaticMapFragment.newInstance()
+            }
             else -> {
                 LogFragment.newInstance()
             }
@@ -51,6 +55,6 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
 
     override fun getCount(): Int {
         // Show 2 total pages.
-        return 5
+        return 6
     }
 }

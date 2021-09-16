@@ -9,6 +9,7 @@
     <string name="tab_text_msgreq">Message Req</string>
     <string name="tab_text_navi">Navigation Command</string>
     <string name="tab_text_free">Free Command</string>
+    <string name="tab_text_staticmap">Static Map</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
     <string name="send">Send</string>
