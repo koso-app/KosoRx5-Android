@@ -20,12 +20,12 @@ sequenceDiagram
     participant RX5
     Note left of App: connect to RX5
     loop connected
-    RX5->>App: runtime info 1
-    RX5->>App: runtime info 2
+    RX5->>App: RuntimeInfo1Command
+    RX5->>App: RuntimeInfo2Command
     end
     Note left of App: start navigation
 	loop navigating
-	App->>RX5: navigation 
+	App->>RX5: NaviInfoCommand 
 	end
 	
 ```
