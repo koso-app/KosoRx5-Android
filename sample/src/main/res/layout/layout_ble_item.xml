@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vRoot"
+    android:background="?attr/selectableItemBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/vIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/l_space"
+        android:src="@drawable/ic_baseline_bluetooth_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/vName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/fontHighLight"
+        android:layout_margin="@dimen/l_space"
+        android:textSize="@dimen/font_list_item"
+        app:layout_constraintBottom_toBottomOf="@id/vIcon"
+        app:layout_constraintEnd_toStartOf="@id/vType"
+        app:layout_constraintStart_toEndOf="@id/vIcon"
+        app:layout_constraintTop_toTopOf="@id/vIcon" />
+
+    <TextView
+        android:id="@+id/vAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/s_space"
+        app:layout_constraintStart_toStartOf="@id/vName"
+        app:layout_constraintTop_toBottomOf="@id/vName" />
+
+    <TextView
+        android:id="@+id/vType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/l_space"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/vName" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

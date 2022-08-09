@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            tools:context=".ui.main.NaviCommandsFragment">
+
+            <Spinner
+                android:id="@+id/navimode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/navimode"
+                android:tooltipText="Navimode"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//navimode"
+                app:layout_constraintBottom_toBottomOf="@id/navimode"
+                app:layout_constraintStart_toEndOf="@id/navimode"
+
+                app:layout_constraintTop_toTopOf="@id/navimode" />
+
+            <EditText
+                android:id="@+id/ctname"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="text"
+                android:text="台南市"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/navimode" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//city name"
+                app:layout_constraintBottom_toBottomOf="@id/ctname"
+                app:layout_constraintStart_toEndOf="@id/ctname"
+                app:layout_constraintTop_toTopOf="@id/ctname" />
+
+            <EditText
+                android:id="@+id/nowroadname"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="text"
+                android:text="東門路"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/ctname" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//road name; char[24]"
+                app:layout_constraintBottom_toBottomOf="@id/nowroadname"
+                app:layout_constraintStart_toEndOf="@id/nowroadname"
+                app:layout_constraintTop_toTopOf="@id/nowroadname" />
+
+            <EditText
+                android:id="@+id/doornum"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="text"
+                android:text="123"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/nowroadname" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//road name"
+                app:layout_constraintBottom_toBottomOf="@id/doornum"
+                app:layout_constraintStart_toEndOf="@id/doornum"
+                app:layout_constraintTop_toTopOf="@id/doornum" />
+
+            <EditText
+                android:id="@+id/limitsp"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="numberDecimal"
+                android:text="-1"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/doornum" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//limit speed"
+                app:layout_constraintBottom_toBottomOf="@id/limitsp"
+                app:layout_constraintStart_toEndOf="@id/limitsp"
+                app:layout_constraintTop_toTopOf="@id/limitsp" />
+
+            <EditText
+                android:id="@+id/nextroad"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="text"
+                android:text="西門路"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/limitsp" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//next road name"
+                app:layout_constraintBottom_toBottomOf="@id/nextroad"
+                app:layout_constraintStart_toEndOf="@id/nextroad"
+                app:layout_constraintTop_toTopOf="@id/nextroad" />
+
+            <EditText
+                android:id="@+id/nextdist"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="numberDecimal"
+                android:text="600"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/nextroad" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//next turn distance"
+                app:layout_constraintBottom_toBottomOf="@id/nextdist"
+                app:layout_constraintStart_toEndOf="@id/nextdist"
+                app:layout_constraintTop_toTopOf="@id/nextdist" />
+
+            <EditText
+                android:id="@+id/turntype"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="numberDecimal"
+                android:text="2"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/nextdist" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//turn type"
+                app:layout_constraintBottom_toBottomOf="@id/turntype"
+                app:layout_constraintStart_toEndOf="@id/turntype"
+                app:layout_constraintTop_toTopOf="@id/turntype" />
+
+            <EditText
+                android:id="@+id/camera"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="numberDecimal"
+                android:text="50"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/turntype" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//camera distance"
+                app:layout_constraintBottom_toBottomOf="@id/camera"
+                app:layout_constraintStart_toEndOf="@id/camera"
+                app:layout_constraintTop_toTopOf="@id/camera" />
+
+            <EditText
+                android:id="@+id/navidist"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="numberDecimal"
+                android:text="3001"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/camera" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//total distance"
+                app:layout_constraintBottom_toBottomOf="@id/navidist"
+                app:layout_constraintStart_toEndOf="@id/navidist"
+                app:layout_constraintTop_toTopOf="@id/navidist" />
+
+            <EditText
+                android:id="@+id/navitime"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="numberDecimal"
+                android:text="35"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/navidist" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//total time"
+                app:layout_constraintBottom_toBottomOf="@id/navitime"
+                app:layout_constraintStart_toEndOf="@id/navitime"
+                app:layout_constraintTop_toTopOf="@id/navitime" />
+
+            <EditText
+                android:id="@+id/gpsnum"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="numberDecimal"
+                android:text="8"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/navitime" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//GPS satellite count"
+                app:layout_constraintBottom_toBottomOf="@id/gpsnum"
+                app:layout_constraintStart_toEndOf="@id/gpsnum"
+                app:layout_constraintTop_toTopOf="@id/gpsnum" />
+
+            <EditText
+                android:id="@+id/gpsdir"
+                android:layout_width="@dimen/edittext_width"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:inputType="numberDecimal"
+                android:text="112"
+                app:layout_constraintStart_toStartOf="@id/navimode"
+                app:layout_constraintTop_toBottomOf="@id/gpsnum" />
+
+            <TextView
+                style="@style/notetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="//GPS direction"
+                app:layout_constraintBottom_toBottomOf="@id/gpsdir"
+                app:layout_constraintStart_toEndOf="@id/gpsdir"
+                app:layout_constraintTop_toTopOf="@id/gpsdir" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/vSend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/send" />
+</LinearLayout>

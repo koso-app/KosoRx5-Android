@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="輸入16進位內容"
+        />
+
+    <EditText
+        android:id="@+id/vEditText"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="16dp"
+        android:background="#E0E0E0"
+        android:gravity="top"
+        android:padding="8dp"
+        android:inputType="textCapCharacters"
+        android:hint="FF89"
+        />
+
+    <Button
+        android:id="@+id/vSend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/send"/>
+</LinearLayout>

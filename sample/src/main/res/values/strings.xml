@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Rx5Sample</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="connected">Connected</string>
+    <string name="discovering">Searching...</string>
+    <string name="connecting">Connecting...</string>
+    <string name="title_activity_tabbed">TabbedActivity</string>
+    <string name="tab_text_conn">Connection</string>
+    <string name="tab_text_msgreq">Message Req</string>
+    <string name="tab_text_navi">Navigation Command</string>
+    <string name="tab_text_free">Free Command</string>
+    <string name="tab_text_staticmap">Static Map</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="send">Send</string>
+    <string name="clear">Clear</string>
+    <string name="default_target_mac_address">00:1D:86:20:00:09</string>
+    <string-array name="navimode">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Devices config</string>
+
+    <!-- Device Preferences -->
+    <string name="target_mac_address">Target MAC address</string>
+    <string name="search">Search</string>
+    <string name="scanning">搜尋中</string>
+    <string name="please_choose_a_bt">選擇一個藍芽裝置</string>
+    <string name="no_device">尚未選擇裝置</string>
+    <string name="connect_to">連線到%s</string>
+    <string name="choose_device">搜尋裝置</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tab_text_log">Log</string>
+
+</resources>

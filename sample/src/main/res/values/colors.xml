@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFF</color>
+    <color name="colorPrimaryDark">#DDD</color>
+    <color name="colorAccent">#404040</color>
+    <color name="colorDisconnect">#BB0000</color>
+    <color name="colorConnect">#00BB00</color>
+    <color name="colorProgress">#BBBB00</color>
+    <color name="btnTextColor">#505050</color>
+    <color name="fontHighLight">#303030</color>
+</resources>
