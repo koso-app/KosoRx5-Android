@@ -81,7 +81,7 @@ Rx5Handler.startConnectService() will start a foreground service with a notifica
 
 
 
-## Interrupt connection
+## Interrupt a connection
 
 You're able to disconnect programmatically by following snippets.
 
@@ -92,7 +92,7 @@ Rx5Handler.stopConnectService(requireActivity())
 
 
 
-## Listen to the RX5 connect state
+## Listen to the RX5 connection state
 
 Rx5Handler.STATE_LIVE is a [LiveData](https://developer.android.com/topic/libraries/architecture/livedata) observable object, provides runtime change of the Rx5Device.State which Including Disconnected, Discovering, Connected and Connecting
 
@@ -194,7 +194,7 @@ class RuntimeInfo2Command{
 
 Navigation info, Send from App to Rx5, at least one transaction per 10 seconds.
 
-In the navigation function, App should take responsibility of calculating the navigation info, and send the direction info to the RX5 at every location updated. You are able to write a NaviInfoCommand using Rx5Handler.rx5!!.write() method.
+In the navigation function, App should take responsibility of calculating the navigation info, then send the direction result to the RX5 at every location updated. You are able to write a NaviInfoCommand using Rx5Handler.rx5!!.write() method.
 
 *Navigation info data model*
 
