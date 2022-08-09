@@ -1,18 +1,18 @@
 # RX5 communication example for Android
 
-- We use bluetooth classic to communicate between Android and Rx5
-- When connected with RX5, two commands will be received by App:
-    - RuntimeInfo1Command (contains speed, rpm, battery voltage, fuel consumption, gear and fuel level data.)
-    - RuntimeInfo2Command (contains odo, trip1, trip2 and some other statistics info.)
-- App take responsibility to calculate real-time navigation info and send to RX5
-    - NaviInfoCommand (used to send road name, turn direction and distance info to RX5)
-
+This project demonstrate how we are able to create an Android project to communicate with Koso RX5 device. We use bluetooth classic to communicate between Android and Rx5 (which is difference in iOS).
 
 
 
 ## Communication flow
 
+We uses 3 commands for RX5 communication, including:
 
+- When connected with RX5, two commands will be received by App:
+    - RuntimeInfo1Command (contains speed, rpm, battery voltage, fuel consumption, gear and fuel level data.)
+    - RuntimeInfo2Command (contains odo, trip1, trip2 and some other statistics info.)
+- App takes responsibility to calculate real-time navigation info and send to RX5
+    - NaviInfoCommand (used to send road name, turn direction and distance info to RX5)
 
 ```mermaid
 sequenceDiagram
