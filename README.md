@@ -136,7 +136,7 @@ Rx5Handler.incomingCommandLive().observe(lifecyclerOwner){ it ->
 ### Runtime-info 1 command
 
 Send from RX5 to App once per second.
-It contains runtime speed, rpm, battery voltage, fuel consumption, gear and fuel level data. App side will receive once per second automatically when app connected to RX5.
+It contains runtime speed, rpm, battery voltage, fuel consumption, gear and fuel level data (please refer to the RuntimeInfo1Command data model below). App side will receive once per second automatically when app connected to RX5.
 
 *RuntimeInfo1Command data model*
 
@@ -157,7 +157,7 @@ It contains runtime speed, rpm, battery voltage, fuel consumption, gear and fuel
 ### Runtime-info 2 command
 
 Send from RX5 to App once per 10 seconds.
-It contains odo, trip1, trip2 and some other statistics info. App side will receive once per 10 seconds automatically when app connected to RX5
+It contains odo, trip1, trip2 and some other statistics info (please refer to the RuntimeInfo2Command data model below). App side will receive once per 10 seconds automatically when app connected to RX5
 
 *RuntimeInfo2Command data model*
 
