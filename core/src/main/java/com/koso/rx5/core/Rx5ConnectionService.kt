@@ -110,7 +110,7 @@ class Rx5ConnectionService : LifecycleService() {
     private fun postOngoingNotification() {
         val pendingIntent: PendingIntent =
             Intent("com.koso.rx5.action.VIEW").let { notificationIntent ->
-                PendingIntent.getActivity(this, 0, notificationIntent, 0)
+                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
             }
 
 
