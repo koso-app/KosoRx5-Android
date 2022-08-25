@@ -62,7 +62,6 @@ object Rx5Handler{
         return rxBluetooth.observeDevices()
     }
 
-
     /**
      * Start the remote device discovery process.
      */
@@ -70,8 +69,6 @@ object Rx5Handler{
 
         rxBluetooth.startDiscovery()
     }
-
-
 
     fun destory() {
         rx5?.destory()

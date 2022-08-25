@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.util.Log
 import com.github.ivbaranov.rxbluetooth.BluetoothConnection
 import com.github.ivbaranov.rxbluetooth.RxBluetooth
+import com.github.ivbaranov.rxbluetooth.exceptions.ConnectionClosedException
 import com.koso.rx5.core.command.incoming.AvailableIncomingCommands
 import com.koso.rx5.core.command.incoming.BaseIncomingCommand
 import com.koso.rx5.core.command.outgoing.BaseOutgoingCommand
@@ -291,19 +292,24 @@ open class Rx5Device(
     }
 
     private fun disconnect() {
-        btConnection?.closeConnection()
-        btConnection = null
+        try {
+            btConnection?.closeConnection()
+            btConnection = null
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
     }
 
 
 
     open fun destory() {
-
-        compositeDisposable.dispose()
         unregisterDisconnect(context = context)
         cancelDiscovery()
         disconnect()
+
         Rx5Handler.setState(State.Disconnected)
+        compositeDisposable.dispose()
+
     }
 
     interface IncomingCommandListener{
