@@ -32,7 +32,7 @@ sequenceDiagram
 
 
 
-## Installation 
+## Installing
 
 - Clone git repository to local storage
 

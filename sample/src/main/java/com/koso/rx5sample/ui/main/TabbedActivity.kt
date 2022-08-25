@@ -41,12 +41,12 @@ class TabbedActivity : AppCompatActivity() {
     private fun checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
+                android.Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION),
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_PERMISSION_COARSE_LOCATION
             )
         }
@@ -58,6 +58,28 @@ class TabbedActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(android.Manifest.permission.BLUETOOTH),
+                REQUEST_PERMISSION_COARSE_LOCATION
+            )
+        }
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.BLUETOOTH_SCAN
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.BLUETOOTH_SCAN),
+                REQUEST_PERMISSION_COARSE_LOCATION
+            )
+        }
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.BLUETOOTH_CONNECT),
                 REQUEST_PERMISSION_COARSE_LOCATION
             )
         }
