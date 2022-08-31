@@ -48,7 +48,7 @@ sequenceDiagram
 - In the settings.gradle, include "core" module
 
     ```
-    include ':sample', ':core'
+    include ':core'
     ```
 
 - In the module level build.gradle, add "core" module as dependency
