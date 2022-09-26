@@ -262,7 +262,7 @@ RX5 turn type mapping to [Google direction API](https://developers.google.com/ma
 | roundabout-right    |    41     | <img src="./readme-img/img_direction_roundaboutright.png" style="background-color:black;" width="40" height="40"/> |
 | straight            |     0     | <img src="./readme-img/img_direction_straight.png" style="background-color:black;" width="40" height="40"/> |
 | turn-left           |     1     | <img src="./readme-img/img_direction_turnleft.png" style="background-color:black;" width="40" height="40"/> |
-| turn-right          |     2     | <img src="./readme-img/img_direction_folkright.png" style="background-color:black;" width="40" height="40"/> |
+| turn-right          |     2     | <img src="./readme-img/img_direction_turnright.png" style="background-color:black;" width="40" height="40"/> |
 | turn-sharp-left     |    30     | <img src="./readme-img/img_direction_turnsharpleft.png" style="background-color:black;" width="40" height="40"/> |
 | turn-sharp-right    |    31     | <img src="./readme-img/img_direction_turnsharpright.png" style="background-color:black;" width="40" height="40"/> |
 | uturn-left          |    38     | <img src="./readme-img/img_direction_uturnleft.png" style="background-color:black;" width="40" height="40"/> |
