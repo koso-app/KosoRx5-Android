@@ -20,12 +20,27 @@ class Rx5ConnectionService : LifecycleService() {
 
     companion object {
         private val EXTRA_STOP = "extra_stop"
+        private val EXTRA_UPDATE_NAVI = "update_navi"
+        private val EXTRA_DISMISS_NAVI = "dismiss_navi"
+        private val EXTRA_START = "mac"
         private var NOTIFICATION_ID = 29
 
         fun startService(context: Context, macAddr: String, notifyId: Int) {
             NOTIFICATION_ID = notifyId
             val intent = Intent(context, Rx5ConnectionService::class.java)
-            intent.putExtra("mac", macAddr)
+            intent.putExtra(EXTRA_START, macAddr)
+            context.startService(intent)
+        }
+
+        fun updateNaviMessage(context: Context, msg: String?) {
+            val intent = Intent(context, Rx5ConnectionService::class.java)
+            intent.putExtra(EXTRA_UPDATE_NAVI, msg)
+            context.startService(intent)
+        }
+
+        fun dismissNaviMessage(context: Context) {
+            val intent = Intent(context, Rx5ConnectionService::class.java)
+            intent.putExtra(EXTRA_DISMISS_NAVI, true)
             context.startService(intent)
         }
 
@@ -43,7 +58,8 @@ class Rx5ConnectionService : LifecycleService() {
     private val CHANNEL_ID = "RX5 Connection"
 
     private var macAddress: String = ""
-
+    private var started = false
+    private var notificationManager: NotificationManager? = null
     private val connectionStateObserver = Observer<Rx5Device.State> {
         when (it) {
             Rx5Device.State.Disconnected -> {
@@ -81,20 +97,36 @@ class Rx5ConnectionService : LifecycleService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        if (intent != null && intent.getBooleanExtra(EXTRA_STOP, false)) {
-            stopSelf()
-        } else {
-            macAddress = intent?.getStringExtra("mac") ?: ""
-            if (Rx5Handler.rx5 == null) {
-                Rx5Handler.rx5 = Rx5Device(this, macAddress)
-            }
+        if (intent?.extras != null) {
 
-            if (Rx5Handler.STATE_LIVE.value == Rx5Device.State.Disconnected) {
-                Rx5Handler.rx5!!.connectAsClient(Rx5Handler.incomingCommandListener)
-                registerConnectionState()
+            when {
+                intent.extras!!.containsKey(EXTRA_STOP) -> {
+                    stopSelf()
+                }
+                intent.extras!!.containsKey(EXTRA_UPDATE_NAVI) -> {
+                    val msg = intent.getStringExtra(EXTRA_UPDATE_NAVI)
+                    if(msg != null) {
+                        updateNaviNotification(msg)
+                    }
+                }
+                intent.extras!!.containsKey(EXTRA_UPDATE_NAVI) -> {
+                    dismissNaviNorification()
+                }
+                else -> {
+                    macAddress = intent.getStringExtra("mac") ?: ""
+                    if (Rx5Handler.rx5 == null) {
+                        Rx5Handler.rx5 = Rx5Device(this, macAddress)
+                    }
+
+                    if (Rx5Handler.STATE_LIVE.value == Rx5Device.State.Disconnected) {
+                        started = true
+                        Rx5Handler.rx5!!.connectAsClient(Rx5Handler.incomingCommandListener)
+                        registerConnectionState()
+                    }
+                }
+
             }
         }
-
         return START_NOT_STICKY
     }
 
@@ -102,9 +134,15 @@ class Rx5ConnectionService : LifecycleService() {
         Rx5Handler.STATE_LIVE.observe(this, connectionStateObserver)
     }
 
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        Rx5Handler.destory()
+        started = false
+    }
     override fun onDestroy() {
         super.onDestroy()
         Rx5Handler.destory()
+        started = false
     }
 
     private fun postOngoingNotification() {
@@ -136,9 +174,80 @@ class Rx5ConnectionService : LifecycleService() {
                 .setTicker("Connection service started")
                 .build()
         }
-
         startForeground(NOTIFICATION_ID, notification)
     }
+
+    private fun updateNaviNotification(text: String) {
+        val pendingIntent: PendingIntent =
+            Intent("com.koso.rx5.action.VIEW").let { notificationIntent ->
+                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
+            }
+        val notification: Notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val cId = createNotificationChannel("rx5", CHANNEL_ID)
+            NotificationCompat.Builder(this, cId)
+                .setContentTitle("Navigating")
+                .setContentText(text)
+                .setSmallIcon(R.drawable.ic_baseline_navigation_24)
+                .setContentIntent(pendingIntent)
+                .setTicker("Navigating")
+                .setColor(Color.GREEN)
+                .build()
+        } else {
+            getNotificationBuilder(
+                this,
+                "",  // Channel id
+                NotificationManagerCompat.IMPORTANCE_LOW
+            )!!
+                .setContentTitle("Navigating")
+                .setContentText(text)
+                .setSmallIcon(R.drawable.ic_baseline_navigation_24)
+                .setContentIntent(pendingIntent)
+                .setTicker("Navigating")
+                .setColor(Color.GREEN)
+                .build()
+        }
+
+        if(notificationManager == null) {
+            notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        }
+        notificationManager!!.notify(NOTIFICATION_ID, notification)
+    }
+
+    private fun dismissNaviNorification() {
+        val pendingIntent: PendingIntent =
+            Intent("com.koso.rx5.action.VIEW").let { notificationIntent ->
+                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
+            }
+
+
+        val notification: Notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val cId = createNotificationChannel("rx5", CHANNEL_ID)
+            NotificationCompat.Builder(this, cId)
+                .setContentTitle("RX5")
+                .setContentText("Connection service started")
+                .setSmallIcon(R.drawable.ic_stat_connect)
+                .setContentIntent(pendingIntent)
+                .setTicker("Connection service started")
+                .build()
+        } else {
+            getNotificationBuilder(
+                this,
+                "",  // Channel id
+                NotificationManagerCompat.IMPORTANCE_LOW
+            )!!
+                .setContentTitle("RX5")
+                .setContentText("Connection service started")
+                .setSmallIcon(R.drawable.ic_stat_connect)
+                .setContentIntent(pendingIntent)
+                .setTicker("Connection service started")
+                .build()
+        }
+        if(notificationManager == null) {
+            notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        }
+        notificationManager!!.notify(NOTIFICATION_ID, notification)
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(channelId: String, channelName: String): String {
