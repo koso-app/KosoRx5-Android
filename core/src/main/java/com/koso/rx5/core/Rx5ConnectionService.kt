@@ -109,7 +109,7 @@ class Rx5ConnectionService : LifecycleService() {
                         updateNaviNotification(msg)
                     }
                 }
-                intent.extras!!.containsKey(EXTRA_UPDATE_NAVI) -> {
+                intent.extras!!.containsKey(EXTRA_DISMISS_NAVI) -> {
                     dismissNaviNorification()
                 }
                 else -> {
