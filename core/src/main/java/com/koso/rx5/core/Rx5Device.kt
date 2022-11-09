@@ -278,10 +278,10 @@ open class Rx5Device(
 
 
     fun write(cmd: BaseOutgoingCommand): Boolean {
-        Log.d("rx5", Utility.bytesToHex(cmd.encode()))
-        Log.d("rx5", "------")
-        Log.d("rx5", cmd.valueToString())
-        Log.d("rx5", "------")
+//        Log.d("rx5", Utility.bytesToHex(cmd.encode()))
+//        Log.d("rx5", "------")
+//        Log.d("rx5", cmd.valueToString())
+//        Log.d("rx5", "------")
 
         return write(cmd.encode())
     }

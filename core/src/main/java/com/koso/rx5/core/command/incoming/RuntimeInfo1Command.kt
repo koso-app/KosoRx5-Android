@@ -42,7 +42,7 @@ class RuntimeInfo1Command: BaseIncomingCommand() {
         }catch (e: Exception){
             e.printStackTrace()
         }
-        Log.d("rx5", toString())
+//        Log.d("rx5", toString())
     }
 
     override fun createInstance(): RuntimeInfo1Command {

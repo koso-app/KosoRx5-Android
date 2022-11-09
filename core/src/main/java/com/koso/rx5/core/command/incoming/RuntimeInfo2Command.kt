@@ -29,7 +29,7 @@ class RuntimeInfo2Command : BaseIncomingCommand() {
     var service_DST = 0 //剩餘保養里程, 32bits
 
     override fun parseData(rawData: MutableList<Byte>) {
-        Log.d("rx5", "length: $length")
+//        Log.d("rx5", "length: $length")
         try {
             odo = ByteBuffer.allocate(4).apply {
                 put(rawData[3])
