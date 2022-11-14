@@ -17,6 +17,7 @@ import com.koso.rx5.core.util.Utility
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
@@ -77,6 +78,7 @@ open class Rx5Device(
     init {
         observeConnectionState()
         registerStateChange(context)
+        RxJavaPlugins.setErrorHandler { e -> Log.d("rx5device", e.message ?: "") }
     }
 
     private fun unregisterDisconnect(context: Context) {
@@ -303,12 +305,13 @@ open class Rx5Device(
 
 
     open fun destory() {
+        compositeDisposable.dispose()
         unregisterDisconnect(context = context)
         cancelDiscovery()
         disconnect()
 
         Rx5Handler.setState(State.Disconnected)
-        compositeDisposable.dispose()
+
 
     }
 
