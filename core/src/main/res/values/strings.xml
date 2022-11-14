@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">rx5</string>
+    <string name="service_started">Connection service is started</string>
+    <string name="navigating">"Navigating"</string>
 </resources>

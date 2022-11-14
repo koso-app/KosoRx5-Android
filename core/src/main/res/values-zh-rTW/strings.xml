@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="service_started">連線服務已啟動</string>
+    <string name="navigating">導航中</string>
+</resources>

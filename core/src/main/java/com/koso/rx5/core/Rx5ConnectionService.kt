@@ -151,15 +151,19 @@ class Rx5ConnectionService : LifecycleService() {
                 PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
             }
 
-
+        val name = applicationInfo.loadLabel(packageManager).toString()
         val notification: Notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val cId = createNotificationChannel("rx5", CHANNEL_ID)
+
             NotificationCompat.Builder(this, cId)
-                .setContentTitle("RX5")
-                .setContentText("Connection service started")
+                .setContentTitle(name)
+                .setContentText(getString(R.string.service_started))
                 .setSmallIcon(R.drawable.ic_stat_connect)
                 .setContentIntent(pendingIntent)
-                .setTicker("Connection service started")
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setSound(null)
+                .setWhen(0)
+                .setTicker(getString(R.string.service_started))
                 .build()
         } else {
             getNotificationBuilder(
@@ -167,11 +171,11 @@ class Rx5ConnectionService : LifecycleService() {
                 "",  // Channel id
                 NotificationManagerCompat.IMPORTANCE_LOW
             )!!
-                .setContentTitle("RX5")
-                .setContentText("Connection service started")
+                .setContentTitle(name)
+                .setContentText(getString(R.string.service_started))
                 .setSmallIcon(R.drawable.ic_stat_connect)
                 .setContentIntent(pendingIntent)
-                .setTicker("Connection service started")
+                .setTicker(getString(R.string.service_started))
                 .build()
         }
         startForeground(NOTIFICATION_ID, notification)
@@ -182,14 +186,15 @@ class Rx5ConnectionService : LifecycleService() {
             Intent("com.koso.rx5.action.VIEW").let { notificationIntent ->
                 PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
             }
+
         val notification: Notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val cId = createNotificationChannel("rx5", CHANNEL_ID)
             NotificationCompat.Builder(this, cId)
-                .setContentTitle("Navigating")
+                .setContentTitle(getString(R.string.navigating))
                 .setContentText(text)
                 .setSmallIcon(R.drawable.ic_baseline_navigation_24)
                 .setContentIntent(pendingIntent)
-                .setTicker("Navigating")
+                .setTicker(getString(R.string.navigating))
                 .setColor(Color.GREEN)
                 .build()
         } else {
@@ -198,11 +203,11 @@ class Rx5ConnectionService : LifecycleService() {
                 "",  // Channel id
                 NotificationManagerCompat.IMPORTANCE_LOW
             )!!
-                .setContentTitle("Navigating")
+                .setContentTitle(getString(R.string.navigating))
                 .setContentText(text)
                 .setSmallIcon(R.drawable.ic_baseline_navigation_24)
                 .setContentIntent(pendingIntent)
-                .setTicker("Navigating")
+                .setTicker(getString(R.string.navigating))
                 .setColor(Color.GREEN)
                 .build()
         }
@@ -218,16 +223,16 @@ class Rx5ConnectionService : LifecycleService() {
             Intent("com.koso.rx5.action.VIEW").let { notificationIntent ->
                 PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
             }
-
+        val name = applicationInfo.loadLabel(packageManager).toString()
 
         val notification: Notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val cId = createNotificationChannel("rx5", CHANNEL_ID)
             NotificationCompat.Builder(this, cId)
-                .setContentTitle("RX5")
-                .setContentText("Connection service started")
+                .setContentTitle(name)
+                .setContentText(getString(R.string.service_started))
                 .setSmallIcon(R.drawable.ic_stat_connect)
                 .setContentIntent(pendingIntent)
-                .setTicker("Connection service started")
+                .setTicker(getString(R.string.service_started))
                 .build()
         } else {
             getNotificationBuilder(
@@ -235,11 +240,11 @@ class Rx5ConnectionService : LifecycleService() {
                 "",  // Channel id
                 NotificationManagerCompat.IMPORTANCE_LOW
             )!!
-                .setContentTitle("RX5")
-                .setContentText("Connection service started")
+                .setContentTitle(name)
+                .setContentText(getString(R.string.service_started))
                 .setSmallIcon(R.drawable.ic_stat_connect)
                 .setContentIntent(pendingIntent)
-                .setTicker("Connection service started")
+                .setTicker(getString(R.string.service_started))
                 .build()
         }
         if(notificationManager == null) {
