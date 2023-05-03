@@ -66,12 +66,14 @@ open class Rx5Device(
                 GlobalScope.launch(Dispatchers.Main) {
                     Rx5Handler.setState(State.Connected)
                 }
-                bluetoothGatt?.requestMtu(256)
+                bluetoothGatt?.requestMtu(512)
                 bluetoothGatt?.discoverServices()
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 GlobalScope.launch(Dispatchers.Main) {
                     Rx5Handler.setState(State.Disconnected)
                 }
+                destory()
+
             }
         }
 
@@ -178,7 +180,10 @@ open class Rx5Device(
     }
 
     private fun unregisterDisconnect(context: Context) {
-        context.unregisterReceiver(bluetoothReceiver)
+        try {
+            context.unregisterReceiver(bluetoothReceiver)
+        }catch (e: IllegalArgumentException){
+        }
     }
 
     private fun registerStateChange(context: Context) {
@@ -402,7 +407,11 @@ open class Rx5Device(
     }
 
     fun writeLe(cmd: BaseOutgoingCommand): Boolean{
-        return gattWriteCharacteristic?.setValue(cmd.encode()) ?: false
+        val success =  gattWriteCharacteristic?.setValue(cmd.encode()) ?: false
+        if(success) {
+            return bluetoothGatt?.writeCharacteristic(gattWriteCharacteristic) ?: false
+        }
+        return false
     }
 
     fun write(cmd: BaseOutgoingCommand): Boolean {
@@ -432,6 +441,7 @@ open class Rx5Device(
     open fun destory() {
 
         //for ble
+        bluetoothGatt?.disconnect()
         bluetoothGatt?.close()
         bluetoothGatt = null
 
