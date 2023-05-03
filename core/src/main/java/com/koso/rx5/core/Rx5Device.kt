@@ -1,7 +1,6 @@
 package com.koso.rx5.core
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
+import android.bluetooth.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -32,6 +31,9 @@ open class Rx5Device(
         Disconnected, Discovering, Connected, Connecting
     }
 
+
+
+
     /**
      * The Bluetooth handler based on RxJava
      */
@@ -47,6 +49,29 @@ open class Rx5Device(
 
     private val delimiters = 0x55
 
+    private var bluetoothGatt: BluetoothGatt? = null
+
+    private val bluetoothGattCallback = object : BluetoothGattCallback() {
+        override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
+            bluetoothGatt = gatt
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
+                Rx5Handler.setState(State.Connected)
+                bluetoothGatt?.discoverServices()
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                Rx5Handler.setState(State.Disconnected)
+            }
+        }
+
+        override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
+            super.onServicesDiscovered(gatt, status)
+            if(status == BluetoothGatt.GATT_SUCCESS){
+                val gattServices = gatt?.services
+                gattServices?.forEach {
+                    Log.d("xunqun", "onServicesDiscovered: ${it.uuid.toString()}")
+                }
+            }
+        }
+    }
 
     /**
      *
@@ -171,8 +196,10 @@ open class Rx5Device(
                                 }
                             }
                             buffer.size > 4 -> {
-                                val command = checkAvailableCommand(buffer)?.classObject?.newInstance()?.create(buffer)
-                                if(command != null){
+                                val command =
+                                    checkAvailableCommand(buffer)?.classObject?.newInstance()
+                                        ?.create(buffer)
+                                if (command != null) {
                                     listener.onCommandAvailable(command)
                                     buffer.clear()
                                 }
@@ -190,6 +217,28 @@ open class Rx5Device(
                 })
         Rx5Handler.setState(State.Connecting)
         compositeDisposable.add(disposable)
+    }
+
+    fun connectToGattServer(listener: IncomingCommandListener): Boolean {
+        Rx5Handler.setState(State.Connecting)
+        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+        bluetoothAdapter?.let { adapter ->
+            try {
+                val device = adapter.getRemoteDevice(mac)
+                bluetoothGatt = device.connectGatt(context, false, bluetoothGattCallback)
+            } catch (exception: IllegalArgumentException) {
+                Log.w("xunqun", "Device not found with provided address.")
+                Rx5Handler.setState(State.Disconnected)
+                return false
+            }
+            // connect to the GATT server on the device
+        } ?: run {
+            Log.w("xunqun", "BluetoothAdapter not initialized")
+            Rx5Handler.setState(State.Disconnected)
+            return false
+        }
+        Rx5Handler.setState(State.Connected)
+        return true
     }
 
     private fun checkAvailableCommand(buffer: MutableList<Byte>): AvailableIncomingCommands? {
@@ -297,14 +346,15 @@ open class Rx5Device(
         try {
             btConnection?.closeConnection()
             btConnection = null
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
 
-
     open fun destory() {
+        bluetoothGatt?.close()
+        bluetoothGatt = null
         compositeDisposable.dispose()
         unregisterDisconnect(context = context)
         cancelDiscovery()
@@ -315,7 +365,7 @@ open class Rx5Device(
 
     }
 
-    interface IncomingCommandListener{
+    interface IncomingCommandListener {
         fun onCommandAvailable(cmd: BaseIncomingCommand)
     }
 }

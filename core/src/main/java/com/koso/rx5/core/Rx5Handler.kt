@@ -46,6 +46,11 @@ object Rx5Handler{
         Rx5ConnectionService.startService(context, address, notifyId)
     }
 
+    // to move bluetooth connect to ble
+    fun startBleConnectService(context: Context, address: String, notifyId: Int){
+
+        Rx5BleConnectionService.startService(context, address, notifyId)
+    }
     /**
      * Stop connection service
      */
