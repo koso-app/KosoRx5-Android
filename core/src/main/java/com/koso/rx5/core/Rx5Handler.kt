@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import com.github.ivbaranov.rxbluetooth.RxBluetooth
 import com.koso.rx5.core.command.incoming.BaseIncomingCommand
 import io.reactivex.Observable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 object Rx5Handler{
 
@@ -47,7 +49,7 @@ object Rx5Handler{
     }
 
     // to move bluetooth connect to ble
-    fun startBleConnectService(context: Context, address: String, notifyId: Int){
+    fun startLeConnectService(context: Context, address: String, notifyId: Int){
 
         Rx5BleConnectionService.startService(context, address, notifyId)
     }
@@ -56,6 +58,10 @@ object Rx5Handler{
      */
     fun stopConnectService(context: Context){
         Rx5ConnectionService.stopService(context)
+    }
+
+    fun stopLeConnectService(context: Context){
+        Rx5BleConnectionService.stopService(context)
     }
 
     /**
