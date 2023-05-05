@@ -71,6 +71,7 @@ open class Rx5Device(
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 GlobalScope.launch(Dispatchers.Main) {
                     Rx5Handler.setState(State.Disconnected)
+
                 }
                 destory()
 
@@ -455,7 +456,7 @@ open class Rx5Device(
         cancelDiscovery()
         disconnect()
 
-        Rx5Handler.setState(State.Disconnected)
+
 
 
     }
