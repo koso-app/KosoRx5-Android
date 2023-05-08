@@ -1,8 +1,18 @@
-# RX5 communication example for Android
+# KOSO Smart Speedometer Protocol
 
 This project demonstrate how we are able to create an Android project to communicate with Koso RX5 device. We use bluetooth classic to communicate between Android and Rx5 (which is difference in iOS).
 
 
+
+## Mobile Phone Notifications
+
+| Mobile OS | Bluetooth         | Protocol                                                     |      |
+| --------- | ----------------- | ------------------------------------------------------------ | ---- |
+| Android   | Bluetooth classic | Audio Video Remote Control Profile(AVRCP) --> Android auto-handling<br />Hands-Free Profile (HFP)  --> Android auto-handling<br />Serial Port Profile (SPP)  --> <font color="red"> KOSO defined data</font> |      |
+| iOS       | Bluetooth LE      | Apple Notification Center Service (ANCS) --> iOS auto-handling<br />Apple Media Service(AMS) --> iOS auto-handling<br />Generic Attribute Profile(GATT) --> <font color="red"> KOSO defined data</font> |      |
+|           |                   |                                                              |      |
+
+The KOSO smart speedometer integrates several Bluetooth protocols for data exchange with Android and iOS, including phone call messages, text messages, media playback messages, control, and other phone information exchange. It also uses Bluetooth SSP (Android) and BLE GATT (iOS) to exchange real-time data and navigation messages with the speedometer. Real-time messages from the phone are communicated with Android and iOS systems through AVRCP, HFP, AMS, ANCS protocols. Therefore, this document mainly introduces the KOSO custom content exchanged through Bluetooth SSP (Android) and BLE GATT (iOS), although the data format used is the same for both Android and iOS, transmitted through Bluetooth class and BLE, respectively.
 
 ## Communication flow
 
@@ -32,7 +42,96 @@ sequenceDiagram
 
 
 
-## Installing
+## Payload format
+
+The data playload follow the defined data structure
+
+![](data_scheme.png)
+
+| Command        | BeginByte    | EndByte      |
+| -------------- | ------------ | ------------ |
+| Runtime Info 1 | [0xFF, 0x80] | [0xFF, 0x2B] |
+| Runtime Info 2 | [0xFF, 0x81] | [0xFF, 0x2C] |
+| Navi Info      | [0xFF, 0x89] | [0xFF, 0x33] |
+
+
+
+### RuntimeInfo1Data
+
+Send from RX5 to App once per second.
+It contains runtime speed, rpm, battery voltage, fuel consumption, gear and fuel level data (please refer to the RuntimeInfo1Command data model below). App side will receive once per second automatically when app connected to RX5.
+
+![](runtime_info_1.png)
+
+| Name                | Length  | Explain    |
+| ------------------- | ------- | ---------- |
+| Speed               | 2 bytes | Speed Km/h |
+| Rpm                 | 2 bytes |            |
+| Gear                | 2 bytes |            |
+| Batt volt           | 2 bytes |            |
+| Fuel                | 1 byte  | Percentage |
+| Instant consumption | 1 byte  |            |
+
+
+
+### RuntimeInfo 2 Data
+
+Send from RX5 to App once per 10 seconds.
+It contains odo, trip1, trip2 and some other statistics info (please refer to the RuntimeInfo2Command data model below). App side will receive once per 10 seconds automatically when app connected to RX5
+
+![](runtime_info_2.png)
+
+| Item                       | Length  | Explain |
+| -------------------------- | ------- | ------- |
+| ODO                        | 4 bytes | Meter   |
+| Total ODO                  | 4 bytes |         |
+| Total ride time            | 4 bytes |         |
+| Average speed              | 2 bytes |         |
+| Average consumption        | 2 bytes |         |
+| Trip 1 distance            | 4 bytes |         |
+| Trip 1 time                | 4 bytes | Seconds |
+| Trip 1 average speed       | 2 bytes |         |
+| Trip 1 average consumption | 2 bytes |         |
+| Trip 2 distance            | 4 bytes |         |
+| Trip 2 time                | 4 bytes |         |
+| Trip 2 average speed       | 2 bytes |         |
+| Trip 2 average consumption | 2 bytes |         |
+| Trip A distance            | 4 bytes |         |
+| Total recording time       | 4 bytes |         |
+| Fuel range                 | 4 bytes | KM      |
+| Next Maintenance Distance  | 4 bytes | Meter   |
+
+
+
+### NaviInfoCommand
+
+
+
+Navigation info, Send from App to Rx5, at least one transaction per 10 seconds.
+
+In the navigation function, App should take responsibility of calculating the navigation info, then send the direction result to the RX5 at every location updated. You are able to write a NaviInfoCommand using Rx5Handler.rx5!!.write() method.
+
+![](navi_info.png)
+
+| Name               | Length   | Explain                                                 |
+| ------------------ | -------- | ------------------------------------------------------- |
+| Mode               | 4 bytes  | Navigating = 1                                          |
+| City               | 24 bytes | UTF-8 string                                            |
+| Road               | 64 bytes | UTR-8 string                                            |
+| House number       | 24 bytes | *Not implement*                                         |
+| Speed limit        | 4 bytes  |                                                         |
+| Next road          | 64 bytes |                                                         |
+| Turn distance      | 4 bytes  |                                                         |
+| Turn type          | 4 bytes  | Refer to [RX5 nextturn type] section below              |
+| Speed camera alert | 4 bytes  | No alert = 0, Alert = 1, Alert > 1 (distance of camera) |
+| Total distance     | 4 bytes  | Meter                                                   |
+| Total time         | 4 bytes  | Minutes                                                 |
+| Gps Count          | 4 bytes  | 0 - 12                                                  |
+| Gps Heading        | 4 bytes  | Degree                                                  |
+
+
+
+## Sample project 
 
 - Clone git repository to local storage
 
@@ -92,7 +191,7 @@ Rx5Handler.stopConnectService(requireActivity())
 
 
 
-## Listen to the RX5 connection state
+## Listen to connection state
 
 Rx5Handler.STATE_LIVE is a [LiveData](https://developer.android.com/topic/libraries/architecture/livedata) observable object, provides runtime change of the Rx5Device.State which Including Disconnected, Discovering, Connected and Connecting
 
