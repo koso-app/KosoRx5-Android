@@ -16,13 +16,23 @@ The KOSO smart speedometer integrates several Bluetooth protocols for data excha
 
 ## SSP 
 
-Service UUID : 00001101-0000-1000-8000-00805F9B34FB
+|                                                     |
+| --------------------------------------------------- |
+| Service UUID : 00001101-0000-1000-8000-00805F9B34FB |
+
+
 
 ## GATT
 
-Service UUID = "D88B7688-729D-BDA1-7A46-25F4104626C7"
-Read Characteristic UUID= "39D7AFB7-4ED7-4334-D79B-6675D916D7E3"
-Write Characteristic UUID = "40E288F6-B367-F64A-A5F7-B4DFEE9F09E7"
+|                                                              |
+| ------------------------------------------------------------ |
+| Service UUID = "D88B7688-729D-BDA1-7A46-25F4104626C7"        |
+| Read Characteristic UUID= "39D7AFB7-4ED7-4334-D79B-6675D916D7E3" |
+| Write Characteristic UUID = "40E288F6-B367-F64A-A5F7-B4DFEE9F09E7" |
+
+
+
+
 
 ## Communication flow
 
