@@ -14,7 +14,7 @@ This project demonstrate how we are able to create an Android project to communi
 
 The KOSO smart speedometer integrates several Bluetooth protocols for data exchange with Android and iOS, including phone call messages, text messages, media playback messages, control, and other phone information exchange. It also uses Bluetooth SSP (Android) and BLE GATT (iOS) to exchange real-time data and navigation messages with the speedometer. Real-time messages from the phone are communicated with Android and iOS systems through AVRCP, HFP, AMS, ANCS protocols. Therefore, this document mainly introduces the KOSO custom content exchanged through Bluetooth SSP (Android) and BLE GATT (iOS), although the data format used is the same for both Android and iOS, transmitted through Bluetooth class and BLE, respectively.
 
-## SSP 
+### SSP 
 
 |                                                     |
 | --------------------------------------------------- |
@@ -22,7 +22,7 @@ The KOSO smart speedometer integrates several Bluetooth protocols for data excha
 
 
 
-## GATT
+### GATT
 
 |                                                              |
 | ------------------------------------------------------------ |
