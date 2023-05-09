@@ -63,7 +63,7 @@ class Rx5BleConnectionService : LifecycleService() {
     private val connectionStateObserver = Observer<Rx5Device.State> {
         when (it) {
             Rx5Device.State.Disconnected -> {
-                stopSelf()
+//                stopSelf()
             }
             Rx5Device.State.Connected -> {
                 postOngoingNotification()

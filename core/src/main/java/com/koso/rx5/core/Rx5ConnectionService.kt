@@ -63,7 +63,9 @@ class Rx5ConnectionService : LifecycleService() {
     private val connectionStateObserver = Observer<Rx5Device.State> {
         when (it) {
             Rx5Device.State.Disconnected -> {
-                stopSelf()
+                if(started) {
+                    stopSelf()
+                }
             }
             Rx5Device.State.Connected -> {
                 postOngoingNotification()
@@ -119,9 +121,10 @@ class Rx5ConnectionService : LifecycleService() {
                     }
 
                     if (Rx5Handler.STATE_LIVE.value == Rx5Device.State.Disconnected) {
+                        registerConnectionState()
                         started = true
                         Rx5Handler.rx5!!.connectAsClient(Rx5Handler.incomingCommandListener)
-                        registerConnectionState()
+
                     }
                 }
 

@@ -18,6 +18,7 @@ import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -61,20 +62,39 @@ open class Rx5Device(
 
     private val bluetoothGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
+            Log.d("xunqun", "onConnectionStateChange: $newState")
             bluetoothGatt = gatt
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    Rx5Handler.setState(State.Connected)
-                }
-                bluetoothGatt?.requestMtu(512)
-                bluetoothGatt?.discoverServices()
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    Rx5Handler.setState(State.Disconnected)
+            when(newState){
+                BluetoothProfile.STATE_CONNECTED -> {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        Rx5Handler.setState(State.Connected)
+                    }
+
+                    GlobalScope.launch(Dispatchers.IO) {
+                        delay(1000)
+                        bluetoothGatt?.requestMtu(256)
+                        delay(4000)
+                        bluetoothGatt?.discoverServices()
+                    }
+
 
                 }
-                destory()
-
+                BluetoothProfile.STATE_DISCONNECTED -> {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        Rx5Handler.setState(State.Disconnected)
+                    }
+                    destory()
+                }
+                BluetoothProfile.STATE_CONNECTING -> {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        Rx5Handler.setState(State.Connecting)
+                    }
+                }
+                BluetoothProfile.STATE_DISCONNECTING -> {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        Rx5Handler.setState(State.Connecting)
+                    }
+                }
             }
         }
 
@@ -86,7 +106,6 @@ open class Rx5Device(
                 gattWriteCharacteristic = gattService?.getCharacteristic(UUID.fromString(WriteCharacteristicUuidString))
 
                 gatt?.setCharacteristicNotification(gattReadCharacteristic, true)
-
             }
         }
 
@@ -301,14 +320,16 @@ open class Rx5Device(
      */
     fun connectToGattServer(listener: IncomingCommandListener): Boolean {
         cmdListener = listener
-        Rx5Handler.setState(State.Connecting)
+
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
         bluetoothAdapter?.let { adapter ->
             try {
                 val device = adapter.getRemoteDevice(mac)
                 bluetoothGatt = device.connectGatt(context, false, bluetoothGattCallback)
+
             } catch (exception: IllegalArgumentException) {
                 Log.w("xunqun", "Device not found with provided address.")
+                destory()
                 Rx5Handler.setState(State.Disconnected)
                 return false
             }
