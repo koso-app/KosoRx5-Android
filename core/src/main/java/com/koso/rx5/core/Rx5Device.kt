@@ -71,7 +71,7 @@ open class Rx5Device(
                     }
 
                     GlobalScope.launch(Dispatchers.IO) {
-                        delay(1000)
+                        delay(2000)
                         bluetoothGatt?.requestMtu(256)
                         delay(4000)
                         bluetoothGatt?.discoverServices()

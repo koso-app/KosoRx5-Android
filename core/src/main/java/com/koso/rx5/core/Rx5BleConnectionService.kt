@@ -151,6 +151,7 @@ class Rx5BleConnectionService : LifecycleService() {
                 PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
             }
 
+
         val name = applicationInfo.loadLabel(packageManager).toString()
         val notification: Notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val cId = createNotificationChannel("rx5", CHANNEL_ID)
