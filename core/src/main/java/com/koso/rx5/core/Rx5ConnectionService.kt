@@ -25,7 +25,7 @@ class Rx5ConnectionService : LifecycleService() {
         private val EXTRA_START = "mac"
         private var NOTIFICATION_ID = 29
 
-        fun startService(context: Context, macAddr: String, notifyId: Int) {
+        fun startService(context: Context, macAddr: String, notifyId: Int = NOTIFICATION_ID) {
             NOTIFICATION_ID = notifyId
             val intent = Intent(context, Rx5ConnectionService::class.java)
             intent.putExtra(EXTRA_START, macAddr)
@@ -55,7 +55,7 @@ class Rx5ConnectionService : LifecycleService() {
     /**
      * Channel id to build Notification
      */
-    private val CHANNEL_ID = "RX5 Connection"
+    private val CHANNEL_ID = "Koso Connection"
 
     private var macAddress: String = ""
     private var started = false
@@ -159,13 +159,12 @@ class Rx5ConnectionService : LifecycleService() {
             val cId = createNotificationChannel("rx5", CHANNEL_ID)
 
             NotificationCompat.Builder(this, cId)
-                .setContentTitle(name)
                 .setContentText(getString(R.string.service_started))
                 .setSmallIcon(R.drawable.ic_stat_connect)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setSound(null)
-                .setWhen(0)
+                .setOngoing(true)
                 .setTicker(getString(R.string.service_started))
                 .build()
         } else {
@@ -174,11 +173,12 @@ class Rx5ConnectionService : LifecycleService() {
                 "",  // Channel id
                 NotificationManagerCompat.IMPORTANCE_LOW
             )!!
-                .setContentTitle(name)
                 .setContentText(getString(R.string.service_started))
                 .setSmallIcon(R.drawable.ic_stat_connect)
                 .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setTicker(getString(R.string.service_started))
+                .setOngoing(true)
                 .build()
         }
         startForeground(NOTIFICATION_ID, notification)
@@ -189,6 +189,9 @@ class Rx5ConnectionService : LifecycleService() {
             Intent("com.koso.rx5.action.VIEW").let { notificationIntent ->
                 PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
             }
+        val deleteIntent: PendingIntent = Intent("com.koso.rx5.action.NAVICANCEL").let { notificationIntent ->
+            PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
+        }
 
         val notification: Notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val cId = createNotificationChannel("rx5", CHANNEL_ID)
@@ -198,7 +201,9 @@ class Rx5ConnectionService : LifecycleService() {
                 .setSmallIcon(R.drawable.ic_baseline_navigation_24)
                 .setContentIntent(pendingIntent)
                 .setTicker(getString(R.string.navigating))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setColor(Color.GREEN)
+                .setDeleteIntent(deleteIntent)
                 .build()
         } else {
             getNotificationBuilder(
@@ -211,6 +216,7 @@ class Rx5ConnectionService : LifecycleService() {
                 .setSmallIcon(R.drawable.ic_baseline_navigation_24)
                 .setContentIntent(pendingIntent)
                 .setTicker(getString(R.string.navigating))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setColor(Color.GREEN)
                 .build()
         }

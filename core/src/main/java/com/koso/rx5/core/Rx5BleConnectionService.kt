@@ -25,7 +25,7 @@ class Rx5BleConnectionService : LifecycleService() {
         private val EXTRA_START = "mac"
         private var NOTIFICATION_ID = 29
 
-        fun startService(context: Context, macAddr: String, notifyId: Int) {
+        fun startService(context: Context, macAddr: String, notifyId: Int = NOTIFICATION_ID) {
             NOTIFICATION_ID = notifyId
             val intent = Intent(context, Rx5BleConnectionService::class.java)
             intent.putExtra(EXTRA_START, macAddr)
