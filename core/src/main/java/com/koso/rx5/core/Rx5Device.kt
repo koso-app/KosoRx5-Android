@@ -82,6 +82,7 @@ open class Rx5Device(
                 BluetoothProfile.STATE_DISCONNECTED -> {
                     GlobalScope.launch(Dispatchers.Main) {
                         Rx5Handler.setState(State.Disconnected)
+                        Rx5Handler.stopConnectService(context)
                     }
                     destory()
                 }
