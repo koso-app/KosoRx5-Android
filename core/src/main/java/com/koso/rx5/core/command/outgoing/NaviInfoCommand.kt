@@ -9,6 +9,8 @@ class NaviInfoCommand(
     val roadname: String,    //char         nowroadname[64];  //目前道路名稱// /*strcpy( an.nowroadname, "光復路一段" );*/ strcpy( an.ctname, "\xb7\x73\xa5\x5f\xa5\xab\xa4\x54\xad\xab\xb0\xcf" );  //Big5編碼
     val doornum: String,     //char         doornum[24]; // 數字字碼或中文字碼
     val limitsp: Int,           //int          limitsp;  //目前道路速限 單位 : 公里  an.limitsp = 60;  //-1表示無速限資料
+    val limitkmh: Int,
+    val limitmph: Int,
     val nextroadname: String,//char         nextroadname[64];  //下條轉彎道路名稱 /*strcpy( an.nextroadname, "重新路一段" );*/ strcpy( an.nextroadname, "\xad\xab\xb7\x73\xb8\xf4\xa4\x40\xac\x71" );  //Big5編碼
     val nextdist: Int,          //int          nextdist;  //下條轉彎道路距離 單位 : 公尺   an.nextdist = 200;
     val nextturn: Int,          //int          nextturn; //下條轉彎方向i=nextturn%100,道路型態bbb=(int)(nextturn/100) an.nextdist = 0;(直行),an.nextdist = 100;(橋梁)
@@ -54,7 +56,8 @@ class NaviInfoCommand(
     }
 
     fun getLimitSpeed(): ByteArray {
-        return limitsp.toByteArray(4).reversedArray()
+//        return limitsp.toByteArray(4).reversedArray()
+        return concatenateByteArrays(limitkmh.toByteArray(2).reversedArray(), limitmph.toByteArray(2).reversedArray())
     }
 
     fun getNextRoadName(): ByteArray {
