@@ -62,7 +62,7 @@ open class Rx5Device(
 
     private val bluetoothGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
-            Log.d("xunqun", "onConnectionStateChange: $newState")
+            Log.d("bledebug", "onConnectionStateChange: $newState")
             bluetoothGatt = gatt
             when(newState){
                 BluetoothProfile.STATE_CONNECTED -> {
@@ -329,14 +329,14 @@ open class Rx5Device(
                 bluetoothGatt = device.connectGatt(context, false, bluetoothGattCallback)
 
             } catch (exception: IllegalArgumentException) {
-                Log.w("xunqun", "Device not found with provided address.")
+                Log.w("bledebug", "Device not found with provided address.")
                 destory()
                 Rx5Handler.setState(State.Disconnected)
                 return false
             }
             // connect to the GATT server on the device
         } ?: run {
-            Log.w("xunqun", "BluetoothAdapter not initialized")
+            Log.w("bledebug", "BluetoothAdapter not initialized")
             Rx5Handler.setState(State.Disconnected)
             return false
         }
