@@ -29,9 +29,12 @@ open class Rx5Device(
     val SERVICE_UUID: String = "00001101-0000-1000-8000-00805F9B34FB"
 ) {
 
-    val ServiceUuidString = "D88B7688-729D-BDA1-7A46-25F4104626C7"
-    val ReadCharacteristicUuidString = "39D7AFB7-4ED7-4334-D79B-6675D916D7E3"
-    val WriteCharacteristicUuidString = "40E288F6-B367-F64A-A5F7-B4DFEE9F09E7"
+//    val ServiceUuidString = "D88B7688-729D-BDA1-7A46-25F4104626C7"
+    val ServiceUuidString = "92faec07-c075-4b7c-a6c2-bbd1d1a150f5" // Kawasaki
+//    val ReadCharacteristicUuidString = "39D7AFB7-4ED7-4334-D79B-6675D916D7E3"
+    val ReadCharacteristicUuidString = "3aabbb34-eac0-40f5-9d50-3a1ee6787136" // Kawasaki data source uuid
+//    val WriteCharacteristicUuidString = "40E288F6-B367-F64A-A5F7-B4DFEE9F09E7"
+    val WriteCharacteristicUuidString = "acf1b15c-10f9-4942-a32d-f9e019b95402" // Kawasaki control point uuid
 
     enum class State {
         Disconnected, Discovering, Connected, Connecting
