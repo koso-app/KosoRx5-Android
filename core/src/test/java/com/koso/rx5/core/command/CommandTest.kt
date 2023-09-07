@@ -11,7 +11,7 @@ class CommandTest {
     @Test
     fun testNaviInfoCommand() {
         val cmd =
-            NaviInfoCommand(0, "台南市東區", "中華路", "17號", 40, "西門路", 350, 3, 10, 35000, 40, 12, 120)
+            NaviInfoCommand(0, "台南市東區", "中華路", "17號", 40, 25, 40, 40, 25, "西門路", 350, 3, 10, 35000, 40, 12, 120)
 
 
         println("size = ${cmd.value().size}")

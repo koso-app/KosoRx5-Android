@@ -8,6 +8,8 @@ class NaviInfoCommand(
     val ctname: String,      //char         ctname[24]; 縣市行政區   // /*strcpy( an.ctname, "新北市三重區" );*/ strcpy( an.nowroadname, "\xa5\xfa\xb4\x5f\xb8\xf4\xa4\x40\xac\x71" ); //Big5編碼
     val roadname: String,    //char         nowroadname[64];  //目前道路名稱// /*strcpy( an.nowroadname, "光復路一段" );*/ strcpy( an.ctname, "\xb7\x73\xa5\x5f\xa5\xab\xa4\x54\xad\xab\xb0\xcf" );  //Big5編碼
     val doornum: String,     //char         doornum[24]; // 數字字碼或中文字碼
+    val alertkmh: Int,
+    val alertmph: Int,
     val limitsp: Int,           //int          limitsp;  //目前道路速限 單位 : 公里  an.limitsp = 60;  //-1表示無速限資料
     val limitkmh: Int,
     val limitmph: Int,
@@ -27,6 +29,7 @@ class NaviInfoCommand(
             getCtName(),
             getRoadName(),
             getDoorNum(),
+            getAlertSpeed(),
             getLimitSpeed(),
             getNextRoadName(),
             getNextDist(),
@@ -52,11 +55,14 @@ class NaviInfoCommand(
     }
 
     fun getDoorNum(): ByteArray {
-        return Utility.createLittleEndianStringToByteArray(doornum.toByteArray(), 24)
+        return Utility.createLittleEndianStringToByteArray(doornum.toByteArray(), 20)
+    }
+
+    fun getAlertSpeed(): ByteArray {
+        return concatenateByteArrays(alertkmh.toByteArray(2).reversedArray(), alertmph.toByteArray(2).reversedArray())
     }
 
     fun getLimitSpeed(): ByteArray {
-//        return limitsp.toByteArray(4).reversedArray()
         return concatenateByteArrays(limitkmh.toByteArray(2).reversedArray(), limitmph.toByteArray(2).reversedArray())
     }
 
@@ -99,6 +105,7 @@ class NaviInfoCommand(
         builder.appendLine("CityName = ${Utility.bytesToHex(getCtName())}")
         builder.appendLine("RoadName = ${Utility.bytesToHex(getRoadName())}")
         builder.appendLine("DoorNum = ${Utility.bytesToHex(getDoorNum())}")
+        builder.appendLine("AlertSpeed = ${Utility.bytesToHex(getAlertSpeed())}")
         builder.appendLine("LimitSpeed = ${Utility.bytesToHex(getLimitSpeed())}")
         builder.appendLine(
             "NextRoadName = ${
