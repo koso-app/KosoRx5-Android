@@ -59,7 +59,16 @@ class NaviInfoCommand(
     }
 
     fun getAlertSpeed(): ByteArray {
-        return concatenateByteArrays(alertkmh.toByteArray(2).reversedArray(), alertmph.toByteArray(2).reversedArray())
+        if(alertkmh <= 0 || alertmph <= 0){
+            return concatenateByteArrays(
+                byteArrayOf(0xff.toByte(), 0xff.toByte(), 0xff.toByte(), 0xff.toByte()),
+            )
+        }else {
+            return concatenateByteArrays(
+                alertkmh.toByteArray(2).reversedArray(),
+                alertmph.toByteArray(2).reversedArray()
+            )
+        }
     }
 
     fun getLimitSpeed(): ByteArray {
@@ -105,7 +114,7 @@ class NaviInfoCommand(
         builder.appendLine("CityName = ${Utility.bytesToHex(getCtName())}")
         builder.appendLine("RoadName = ${Utility.bytesToHex(getRoadName())}")
         builder.appendLine("DoorNum = ${Utility.bytesToHex(getDoorNum())}")
-        builder.appendLine("AlertSpeed = ${Utility.bytesToHex(getAlertSpeed())}")
+        builder.appendLine("WarnSpeed = ${Utility.bytesToHex(getAlertSpeed())}")
         builder.appendLine("LimitSpeed = ${Utility.bytesToHex(getLimitSpeed())}")
         builder.appendLine(
             "NextRoadName = ${
