@@ -44,14 +44,14 @@ object Rx5Handler{
     /**
      * Start connection service
      */
-    fun startConnectService(context: Context, address: String){
-        Rx5ConnectionService.startService(context, address)
+    fun startConnectService(context: Context, address: String, notifyId: Int){
+        Rx5ConnectionService.startService(context, address, notifyId)
     }
 
     // to move bluetooth connect to ble
-    fun startLeConnectService(context: Context, address: String){
+    fun startLeConnectService(context: Context, address: String, notifyId: Int){
 
-        Rx5BleConnectionService.startService(context, address)
+        Rx5BleConnectionService.startService(context, address, notifyId)
     }
     /**
      * Stop connection service
