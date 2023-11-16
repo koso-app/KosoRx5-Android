@@ -4,7 +4,7 @@ This project demonstrate how we are able to create an Android project to communi
 
 
 
-## Mobile Phone communication
+## Mobile Phone Notifications
 
 | Mobile OS | Bluetooth         | Protocol                                                     |      |
 | --------- | ----------------- | ------------------------------------------------------------ | ---- |
@@ -13,26 +13,6 @@ This project demonstrate how we are able to create an Android project to communi
 |           |                   |                                                              |      |
 
 The KOSO smart speedometer integrates several Bluetooth protocols for data exchange with Android and iOS, including phone call messages, text messages, media playback messages, control, and other phone information exchange. It also uses Bluetooth SSP (Android) and BLE GATT (iOS) to exchange real-time data and navigation messages with the speedometer. Real-time messages from the phone are communicated with Android and iOS systems through AVRCP, HFP, AMS, ANCS protocols. Therefore, this document mainly introduces the KOSO custom content exchanged through Bluetooth SSP (Android) and BLE GATT (iOS), although the data format used is the same for both Android and iOS, transmitted through Bluetooth class and BLE, respectively.
-
-### SSP 
-
-|                                                     |
-| --------------------------------------------------- |
-| Service UUID : 00001101-0000-1000-8000-00805F9B34FB |
-
-
-
-### GATT
-
-|                                                              |
-| ------------------------------------------------------------ |
-| Service UUID = "D88B7688-729D-BDA1-7A46-25F4104626C7"        |
-| Read Characteristic UUID= "39D7AFB7-4ED7-4334-D79B-6675D916D7E3" |
-| Write Characteristic UUID = "40E288F6-B367-F64A-A5F7-B4DFEE9F09E7" |
-
-
-
-
 
 ## Communication flow
 
@@ -381,14 +361,14 @@ RX5 turn type mapping to [Google direction API](https://developers.google.com/ma
 | roundabout-right    |    41     | <img src="./readme-img/img_direction_roundaboutright.png" style="background-color:black;" width="40" height="40"/> |
 | straight            |     0     | <img src="./readme-img/img_direction_straight.png" style="background-color:black;" width="40" height="40"/> |
 | turn-left           |     1     | <img src="./readme-img/img_direction_turnleft.png" style="background-color:black;" width="40" height="40"/> |
-| turn-right          |     2     | <img src="./readme-img/img_direction_turnright.png" style="background-color:black;" width="40" height="40"/> |
+| turn-right          |     2     | <img src="./readme-img/img_direction_folkright.png" style="background-color:black;" width="40" height="40"/> |
 | turn-sharp-left     |    30     | <img src="./readme-img/img_direction_turnsharpleft.png" style="background-color:black;" width="40" height="40"/> |
 | turn-sharp-right    |    31     | <img src="./readme-img/img_direction_turnsharpright.png" style="background-color:black;" width="40" height="40"/> |
 | uturn-left          |    38     | <img src="./readme-img/img_direction_uturnleft.png" style="background-color:black;" width="40" height="40"/> |
 | uturn-right         |    39     | <img src="./readme-img/img_direction_uturnright.png" style="background-color:black;" width="40" height="40"/> |
 | turn-slight-left    |    32     | <img src="./readme-img/img_direction_turnslightleft.png" style="background-color:black;" width="40" height="40"/> |
 | turn-slight-right   |    33     | <img src="./readme-img/img_direction_turnslightright.png" style="background-color:black;" width="40" height="40"/> |
-| arrival             |    25     |                                                              |
-|                     |           |                                                              |
-|                     |           |                                                              |
+| arrival             |    25     | <img src="./readme-img/img_nav_finish_wh.png" style="background-color:black;" width="40" height="40"/> |
 
+
+![](icons.png)
