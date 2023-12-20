@@ -1,3 +1,8 @@
+# Dependency
+
+- Flutter 3.13.9 
+- Tools • Dart 3.1.3 • DevTools 2.25.0
+
 # KOSO Smart Speedometer Protocol
 
 This project demonstrate how we are able to create an Android project to communicate with Koso RX5 device. We use bluetooth classic to communicate between Android and Rx5 (which is difference in iOS).
@@ -131,7 +136,7 @@ In the navigation function, App should take responsibility of calculating the na
 
 
 
-## Sample project 
+## Sample project
 
 - Clone git repository to local storage
 
@@ -159,7 +164,7 @@ In the navigation function, App should take responsibility of calculating the na
     }
     ```
 
-    
+
 
 ## Connect to a RX5
 
@@ -346,29 +351,60 @@ if(Rx5Handler.rx5 != null) {
 
 
 
-## RX5 nextturn type
+## KOSO nextturn type
 
-RX5 turn type mapping to [Google direction API](https://developers.google.com/maps/documentation/directions/overview)'s Maneuver
+KOSO turn type mapping to [Google direction API](https://developers.google.com/maps/documentation/directions/overview)'s Maneuver
 
-| Google map maneuver | Turn type |                         Sample image                         |
-| ------------------- | :-------: | :----------------------------------------------------------: |
-| fork-left           |    36     | <img src="./readme-img/img_direction_folkleft.png" style="background-color:black;" width="40" height="40"/> |
-| folk-right          |    37     | <img src="./readme-img/img_direction_folkright.png" style="background-color:black;" width="40" height="40"/> |
-| merge               |    42     | <img src="./readme-img/img_direction_merge.png" style="background-color:black;" width="40" height="40"/> |
-| ramp-left           |    34     | <img src="./readme-img/img_direction_rampleft.png" style="background-color:black;" width="40" height="40"/> |
-| ramp-right          |    35     | <img src="./readme-img/img_direction_rampright.png" style="background-color:black;" width="40" height="40"/> |
-| roundabout-left     |    40     | <img src="./readme-img/img_direction_roundaboutleft.png" style="background-color:black;" width="40" height="40"/> |
-| roundabout-right    |    41     | <img src="./readme-img/img_direction_roundaboutright.png" style="background-color:black;" width="40" height="40"/> |
-| straight            |     0     | <img src="./readme-img/img_direction_straight.png" style="background-color:black;" width="40" height="40"/> |
-| turn-left           |     1     | <img src="./readme-img/img_direction_turnleft.png" style="background-color:black;" width="40" height="40"/> |
-| turn-right          |     2     | <img src="./readme-img/img_direction_folkright.png" style="background-color:black;" width="40" height="40"/> |
-| turn-sharp-left     |    30     | <img src="./readme-img/img_direction_turnsharpleft.png" style="background-color:black;" width="40" height="40"/> |
-| turn-sharp-right    |    31     | <img src="./readme-img/img_direction_turnsharpright.png" style="background-color:black;" width="40" height="40"/> |
-| uturn-left          |    38     | <img src="./readme-img/img_direction_uturnleft.png" style="background-color:black;" width="40" height="40"/> |
-| uturn-right         |    39     | <img src="./readme-img/img_direction_uturnright.png" style="background-color:black;" width="40" height="40"/> |
-| turn-slight-left    |    32     | <img src="./readme-img/img_direction_turnslightleft.png" style="background-color:black;" width="40" height="40"/> |
-| turn-slight-right   |    33     | <img src="./readme-img/img_direction_turnslightright.png" style="background-color:black;" width="40" height="40"/> |
-| arrival             |    25     | <img src="./readme-img/img_nav_finish_wh.png" style="background-color:black;" width="40" height="40"/> |
+| Direction Sign           | Turn type | Sample Image                                                 |
+| ------------------------ | --------- | ------------------------------------------------------------ |
+| Straight                 | 0         | <img src="./readme-img/img_nav_straight_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Turn left                | 1         | <img src="./readme-img/img_nav_turn_left_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Turn right               | 2         | <img src="./readme-img/img_nav_turn_right_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Arrive                   | 25        | <img src="./readme-img/img_nav_finish_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Turn sharp left          | 30        | <img src="./readme-img/img_nav_turn_sharp_left_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Turn sharp right         | 31        | <img src="./readme-img/img_nav_turn_sharp_right_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Turn slight left         | 32        | <img src="./readme-img/img_nav_turn_slight_left_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Turn slight right        | 33        | <img src="./readme-img/img_nav_turn_slight_right_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Ramp left                | 34        | <img src="./readme-img/img_nav_ramp_left_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Ramp right               | 35        | <img src="./readme-img/img_nav_ramp_right_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Fork left                | 36        | <img src="./readme-img/img_nav_fork_left_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Fork right               | 37        | <img src="./readme-img/img_nav_fork_right_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| U-Turn left              | 38        | <img src="./readme-img/img_nav_uturn_left_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| U-Turn right             | 39        | <img src="./readme-img/img_nav_uturn_right_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left          | 40        | <img src="./readme-img/img_nav_roundabout_left_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right         | 41        | <img src="./readme-img/img_nav_roundabout_right_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Merge                    | 42        | <img src="./readme-img/img_nav_merge_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Merge left               | 43        | <img src="./readme-img/img_nav_merge_left_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Merge right              | 44        | <img src="./readme-img/img_nav_merge_right_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Fork middle              | 45        | <img src="./readme-img/img_nav_fork_middle_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 1   | 60        | <img src="./readme-img/img_nav_roundabout_left_01_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 2   | 61        | <img src="./readme-img/img_nav_roundabout_left_02_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 3   | 62        | <img src="./readme-img/img_nav_roundabout_left_03_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 4   | 63        | <img src="./readme-img/img_nav_roundabout_left_04_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 5   | 64        | <img src="./readme-img/img_nav_roundabout_left_05_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 6   | 65        | <img src="./readme-img/img_nav_roundabout_left_06_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 7   | 66        | <img src="./readme-img/img_nav_roundabout_left_07_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 8   | 67        | <img src="./readme-img/img_nav_roundabout_left_08_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 9   | 68        | <img src="./readme-img/img_nav_roundabout_left_09_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 10  | 69        | <img src="./readme-img/img_nav_roundabout_left_10_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 11  | 70        | <img src="./readme-img/img_nav_roundabout_left_11_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout left exit 12  | 71        | <img src="./readme-img/img_nav_roundabout_left_12_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 1  | 80        | <img src="./readme-img/img_nav_roundabout_right_01_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 2  | 81        | <img src="./readme-img/img_nav_roundabout_right_02_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 3  | 82        | <img src="./readme-img/img_nav_roundabout_right_03_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 4  | 83        | <img src="./readme-img/img_nav_roundabout_right_04_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 5  | 84        | <img src="./readme-img/img_nav_roundabout_right_05_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 6  | 85        | <img src="./readme-img/img_nav_roundabout_right_06_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 7  | 86        | <img src="./readme-img/img_nav_roundabout_right_07_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 8  | 87        | <img src="./readme-img/img_nav_roundabout_right_08_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 9  | 88        | <img src="./readme-img/img_nav_roundabout_right_09_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 10 | 89        | <img src="./readme-img/img_nav_roundabout_right_10_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 11 | 90        | <img src="./readme-img/img_nav_roundabout_right_11_wh.svg" style="background-color:black;" width="40" height="40"/> |
+| Roundabout right exit 12 | 91        | <img src="./readme-img/img_nav_roundabout_right_12_wh.svg" style="background-color:black;" width="40" height="40"/> |
+|                          |           |                                                              |
 
 
-![](icons.png)
+
+
+
+​	
